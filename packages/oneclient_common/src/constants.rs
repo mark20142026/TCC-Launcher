@@ -10,14 +10,23 @@ pub const MODRINTH_API_URL: &str = "https://api.modrinth.com";
 pub const MODRINTH_CDN_PREFIX: &str = "https://cdn.modrinth.com/data/";
 pub const CURSEFORGE_API_URL: &str = "https://api.curseforge.com/v1";
 pub const CURSEFORGE_GAME_ID: u32 = 432;
-pub const METADATA_API_URL: &str = std::env::var_os("TCC_META_URL").and_then(|v| v.into_string().ok()).unwrap_or_else(|| "https://meta.polyfrost.org".to_string()).as_str();
+pub fn metadata_api_url() -> &'static str {
+  static URL: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+  URL.get_or_init(|| std::env::var("TCC_META_URL").unwrap_or_else(|_| "https://meta.polyfrost.org".to_string())).as_str()
+}
 pub const MCLOGS_API_URL: &str = "https://api.mclo.gs/1";
 pub const SKYCLIENT_BASE_URL: &str =
 	"https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/refs/heads/main/v1";
-pub const META_URL_BASE: &str = std::env::var_os("TCC_DATA_URL").and_then(|v| v.into_string().ok()).unwrap_or_else(|| "https://data-v2.polyfrost.org".to_string()).as_str();
+pub fn meta_url_base() -> &'static str {
+  static URL: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+  URL.get_or_init(|| std::env::var("TCC_DATA_URL").unwrap_or_else(|_| "https://data-v2.polyfrost.org".to_string())).as_str()
+}
 pub const TOS_URL: &str = "https://polyfrost.org/legal/terms";
 pub const PRIVACY_URL: &str = "https://polyfrost.org/legal/privacy";
-pub const PLUS_BACKEND_URL: &str = std::env::var_os("TCC_PLUS_URL").and_then(|v| v.into_string().ok()).unwrap_or_else(|| "https://plus.polyfrost.org".to_string()).as_str();
+pub fn plus_backend_url() -> &'static str {
+  static URL: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+  URL.get_or_init(|| std::env::var("TCC_PLUS_URL").unwrap_or_else(|_| "https://plus.polyfrost.org".to_string())).as_str()
+}
 
 pub const SENTRY_DSN: &str = match option_env!("ONECLIENT_SENTRY_DSN") {
 	Some(dsn) => dsn,
