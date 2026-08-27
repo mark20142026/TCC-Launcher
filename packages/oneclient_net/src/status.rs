@@ -8,7 +8,7 @@ use crate::service::RequestClient;
 
 const CONNECTIVITY_URL: &str = "https://cp.cloudflare.com/generate_204";
 const MC_AUTH_URL: &str = "https://api.minecraftservices.com/";
-const POLYFROST_STATUS_URL: &str = "https://status.polyfrost.org/index.json";
+const POLYFROST_STATUS_URL: &str = std::env::var_os("TCC_STATUS_URL").and_then(|v| v.into_string().ok()).unwrap_or_else(|| "https://status.polyfrost.org/index.json".to_string()).as_str();
 
 const PROBE_TIMEOUT: Duration = Duration::from_secs(8);
 
