@@ -6,8 +6,8 @@ resolver = "3"
 
 [workspace.package]
 authors = [
-  "Polyfrost",
-  "Polyfrost Contributors",
+  "TCC Team",
+  "TCC Contributors",
 ]
 documentation = "https://github.com/Polyfrost/OneLauncher"
 edition = "2024"

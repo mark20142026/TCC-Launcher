@@ -62,12 +62,12 @@ mimalloc = "=0.1.52"
 winresource = "=0.1.31"
 
 [package.metadata.packager]
-product-name = "OneClient"
-identifier = "org.polyfrost.OneClient"
+product-name = "TCC Launcher"
+identifier = "com.tcc.TCCLauncher"
 category = "Game"
-publisher = "Polyfrost Inc."
-copyright = "© 2026 Polyfrost Inc."
-homepage = "https://polyfrost.org/projects/oneclient"
+publisher = "TCC Team"
+copyright = "© 2026 TCC Team"
+homepage = "https://tcc-launcher.com"
 long-description = "Next-generation open source Minecraft launcher"
 formats = ["nsis", "app", "dmg", "deb", "appimage"]
 binaries = [{ path = "oneclient_app", main = true }]
