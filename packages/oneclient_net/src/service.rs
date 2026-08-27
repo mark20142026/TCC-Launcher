@@ -136,6 +136,16 @@ impl RequestClient {
 
         apply_curseforge_auth(&mut request.request, &self.config.load().curseforge_api_key)?;
 
+    // Supabase auto-headers
+    if let Ok(key) = std::env::var("TCC_SUPABASE_KEY") {
+        if request.request.url().host_str().map_or(false, |h| h.contains("supabase.co")) {
+            let mut headers = request.request.headers_mut();
+            headers.insert("apikey", key.parse().unwrap());
+            headers.insert("Authorization", format!("Bearer {}", key).parse().unwrap());
+            tracing::debug!("Added Supabase headers");
+        }
+    }
+
         let cloned_backup = request.request.try_clone();
         let cloneable = cloned_backup.is_some();
 
