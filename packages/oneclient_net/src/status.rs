@@ -8,7 +8,14 @@ use crate::service::RequestClient;
 
 const CONNECTIVITY_URL: &str = "https://cp.cloudflare.com/generate_204";
 const MC_AUTH_URL: &str = "https://api.minecraftservices.com/";
-const POLYFROST_STATUS_URL: &str = std::env::var_os("TCC_STATUS_URL").and_then(|v| v.into_string().ok()).unwrap_or_else(|| "https://status.polyfrost.org/index.json".to_string()).as_str();
+static POLYFROST_STATUS_URL: OnceLock<String> = OnceLock::new();
+fn polyfrost_status_url() -> &'static str {
+    POLYFROST_STATUS_URL.get_or_init(|| {
+        std::env::var_os("TCC_STATUS_URL")
+            .and_then(|v| v.into_string().ok())
+            .unwrap_or_else(|| "https://status.polyfrost.org/index.json".to_string())
+    })
+}
 
 const PROBE_TIMEOUT: Duration = Duration::from_secs(8);
 
@@ -136,7 +143,7 @@ pub async fn check_service_status(requester: &RequestClient) -> ServiceStatus {
     let mc_auth_up = reachable(client, MC_AUTH_URL).await;
 
     let polyfrost_up = match client
-        .get(POLYFROST_STATUS_URL)
+        .get(polyfrost_status_url())
         .timeout(PROBE_TIMEOUT)
         .send()
         .await
