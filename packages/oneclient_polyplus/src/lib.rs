@@ -106,7 +106,7 @@ fn build_client() -> Result<reqwest::Client, reqwest::Error> {
 }
 
 fn base_url() -> &'static str {
-    constants::PLUS_BACKEND_URL.trim_end_matches('/')
+    constants::plus_backend_url().trim_end_matches('/')
 }
 
 async fn session(auth: &oneclient_auth::AuthService, client: &reqwest::Client) -> Outcome {
