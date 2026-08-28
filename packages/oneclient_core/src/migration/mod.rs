@@ -10,24 +10,24 @@ use oneclient_common::domain::GameLoader;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum MigrationSource {
-    TCC ClientV1,
+    TccClientV1,
     Vanilla,
 }
 
 impl MigrationSource {
     pub const ALL: &'static [MigrationSource] =
-        &[MigrationSource::TCC ClientV1, MigrationSource::Vanilla];
+        &[MigrationSource::TccClientV1, MigrationSource::Vanilla];
 
     pub fn id(self) -> &'static str {
         match self {
-            MigrationSource::TCC ClientV1 => "oneclient_v1",
+            MigrationSource::TccClientV1 => "oneclient_v1",
             MigrationSource::Vanilla => "vanilla",
         }
     }
 
     pub fn display_name(self) -> &'static str {
         match self {
-            MigrationSource::TCC ClientV1 => "TCC Client",
+            MigrationSource::TccClientV1 => "TCC Client",
             MigrationSource::Vanilla => "Minecraft",
         }
     }
@@ -79,7 +79,7 @@ pub enum ImportTarget {
 pub async fn detect() -> LauncherResult<Option<MigrationDetection>> {
     for source in MigrationSource::ALL.iter().copied() {
         let detection = match source {
-            MigrationSource::TCC ClientV1 => oneclient_v1::detect().await?,
+            MigrationSource::TccClientV1 => oneclient_v1::detect().await?,
             MigrationSource::Vanilla => vanilla::detect().await?,
         };
 
@@ -100,7 +100,7 @@ pub async fn import_game_dir(
     target: ImportTarget,
 ) -> LauncherResult<()> {
     match source {
-        MigrationSource::TCC ClientV1 => {
+        MigrationSource::TccClientV1 => {
             oneclient_v1::import_game_dir(state, folder_name, target).await
         }
         MigrationSource::Vanilla => vanilla::import_game_dir(state, target).await,

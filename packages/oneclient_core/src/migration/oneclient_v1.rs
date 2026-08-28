@@ -107,7 +107,7 @@ async fn detect_inner(root: &Path, db_path: &Path) -> LauncherResult<MigrationDe
     pool.close().await;
 
     Ok(MigrationDetection {
-        source: MigrationSource::TCC ClientV1,
+        source: MigrationSource::TccClientV1,
         root: root.to_path_buf(),
         instances,
     })
