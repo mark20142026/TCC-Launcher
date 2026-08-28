@@ -15,6 +15,11 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
       - name: Build launcher
         run: cargo build --release -p oneclient_app
 
