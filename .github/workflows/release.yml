@@ -1,0 +1,47 @@
+name: Release
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Build launcher
+        run: cargo build --release -p oneclient_app
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          cargo install cargo-packager --locked
+          cargo packager --release -p oneclient_app --formats nsis
+        continue-on-error: true
+
+      - name: Collect artifacts
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item target/release/oneclient_app.exe dist/TCC-Client.exe
+          Get-ChildItem -Path target/release -Recurse -Filter *.exe |
+            Where-Object { $_.FullName -notmatch '\\deps\\|\\build\\' -and $_.Name -ne 'oneclient_app.exe' } |
+            ForEach-Object { Copy-Item $_.FullName "dist/$($_.BaseName)-setup.exe" }
+          Get-ChildItem dist
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}
+          name: TCC Client v${{ github.run_number }}
+          body: |
+            TCC Client - open-source Minecraft launcher.
+
+            Download `TCC-Client.exe` (portable) or the installer below.
+          files: dist/*

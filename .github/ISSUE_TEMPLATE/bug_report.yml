@@ -18,8 +18,8 @@ body:
       multiple: true
       options:
         - Core
-        - OneClient
-        - OneLauncher
+        - TCC Client
+        - TCC Launcher
   - type: textarea
     attributes:
       label: Describe the bug

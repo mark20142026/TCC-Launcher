@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/oneclient/CHANGE_LOG.md", "destination": "/api/changelog" },
+    { "source": "/oneclient/tos.json", "destination": "/api/tos" },
+    { "source": "/oneclient/latest.json", "destination": "/api/latest" },
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/(.*)", "destination": "/api/proxy?path=$1" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}

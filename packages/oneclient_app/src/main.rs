@@ -13,9 +13,9 @@ use oneclient_app::{
 };
 use tokio::runtime::Builder;
 
-struct OneClientApp;
+struct TccClientApp;
 
-impl App for OneClientApp {
+impl App for TccClientApp {
     fn render(&self) -> impl IntoElement {
         // Radio state is `!Send` so every writer runs on the UI thread `spawn_forever`
         let station = use_init_radio_station::<AppState, AppChannel>(AppState::default);
@@ -91,7 +91,7 @@ fn main() {
     #[cfg(target_os = "macos")]
     oneclient_app::platform::macos::loop_memory_collector();
 
-    let window_config = WindowConfig::new_app(OneClientApp)
+    let window_config = WindowConfig::new_app(TccClientApp)
         .with_title(constants::WINDOW_TITLE)
         .with_app_id(constants::WINDOW_APP_ID)
         .with_icon(LaunchConfig::window_icon(include_bytes!(

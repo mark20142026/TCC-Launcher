@@ -259,7 +259,7 @@ fn accept_row(accepted: State<bool>) -> impl IntoElement {
                 )
                 .child(
                     label()
-                        .text("Required to use OneClient.")
+                        .text("Required to use TCC Client.")
                         .font_size(11.)
                         .color(colors::fg_secondary()),
                 ),

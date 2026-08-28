@@ -3,7 +3,7 @@
 <img src=".github/media/RepoBanner.png" alt="Repository Banner" />
 
 # TCC Client | TCC Launcher
-The monorepo containing the code for OneLauncher, OneClient, and their core backend.
+The monorepo containing the code for TCC Launcher, TCC Client, and their core backend.
 
 TCC Client is a Minecraft client featuring fully 100% open-source components, offering many packaged and pre-configured mods in one click.
 TCC Launcher is a WIP Minecraft launcher giving power-users the greatest customization whilst featuring a clean UI.

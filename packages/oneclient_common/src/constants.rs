@@ -12,17 +12,17 @@ pub const CURSEFORGE_API_URL: &str = "https://api.curseforge.com/v1";
 pub const CURSEFORGE_GAME_ID: u32 = 432;
 pub fn metadata_api_url() -> &'static str {
   static URL: std::sync::OnceLock<String> = std::sync::OnceLock::new();
-  URL.get_or_init(|| std::env::var("TCC_META_URL").unwrap_or_else(|_| "https://meta.polyfrost.org".to_string())).as_str()
+  URL.get_or_init(|| std::env::var("TCC_META_URL").unwrap_or_else(|_| "https://meta.theazizi.space".to_string())).as_str()
 }
 pub const MCLOGS_API_URL: &str = "https://api.mclo.gs/1";
 pub const SKYCLIENT_BASE_URL: &str =
 	"https://raw.githubusercontent.com/SkyblockClient/SkyblockClient-REPO/refs/heads/main/v1";
 pub fn meta_url_base() -> &'static str {
   static URL: std::sync::OnceLock<String> = std::sync::OnceLock::new();
-  URL.get_or_init(|| std::env::var("TCC_DATA_URL").unwrap_or_else(|_| "https://data-v2.polyfrost.org".to_string())).as_str()
+  URL.get_or_init(|| std::env::var("TCC_DATA_URL").unwrap_or_else(|_| "https://api.theazizi.space".to_string())).as_str()
 }
-pub const TOS_URL: &str = "https://polyfrost.org/legal/terms";
-pub const PRIVACY_URL: &str = "https://polyfrost.org/legal/privacy";
+pub const TOS_URL: &str = "https://theazizi.space/legal/terms";
+pub const PRIVACY_URL: &str = "https://theazizi.space/legal/privacy";
 pub fn plus_backend_url() -> &'static str {
   static URL: std::sync::OnceLock<String> = std::sync::OnceLock::new();
   URL.get_or_init(|| std::env::var("TCC_PLUS_URL").unwrap_or_else(|_| "https://plus.polyfrost.org".to_string())).as_str()

@@ -79,7 +79,7 @@ impl Component for SettingsApis {
             .child(settings_row(
                 IconType::Globe01,
                 "Custom API Endpoint",
-                "Override the default OneClient backend endpoint.",
+                "Override the default TCC Client backend endpoint.",
                 TextInput::new(custom_api_endpoint)
                     .placeholder("Default")
                     .width(Size::px(220.)),

@@ -1,4 +1,4 @@
-name: OneClient Release Build
+name: TCC Client Release Build
 
 
 on:
@@ -113,7 +113,7 @@ jobs:
           # already shipped. A *draft* is a previous failed/partial run of this
           # same workflow, so reuse it.
           if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
-            echo "::error::Tag $TAG already exists on origin — OneClient $VERSION has already been released. Re-run with a bump, or bump the version in Cargo.toml."
+            echo "::error::Tag $TAG already exists on origin — TCC Client $VERSION has already been released. Re-run with a bump, or bump the version in Cargo.toml."
             exit 1
           fi
 
@@ -123,7 +123,7 @@ jobs:
             RELEASE_EXISTS=1
           fi
           if [ "$RELEASE_EXISTS" = "1" ] && [ "$IS_DRAFT" != "true" ]; then
-            echo "::error::Release $TAG already exists and is published — refusing to overwrite OneClient $VERSION. Re-run with a bump, or bump the version in Cargo.toml."
+            echo "::error::Release $TAG already exists and is published — refusing to overwrite TCC Client $VERSION. Re-run with a bump, or bump the version in Cargo.toml."
             exit 1
           fi
 
@@ -146,8 +146,8 @@ jobs:
             gh release create "$TAG" \
               --draft \
               --target "$SHA" \
-              --title "OneClient $VERSION" \
-              --notes "Automated release for OneClient $VERSION."
+              --title "TCC Client $VERSION" \
+              --notes "Automated release for TCC Client $VERSION."
           fi
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
@@ -335,14 +335,14 @@ jobs:
           set -euo pipefail
           out="packages/oneclient_app/icons/generated"
           mkdir -p "$out"
-          xcrun actool packages/oneclient_app/icons/OneClient.icon \
+          xcrun actool packages/oneclient_app/icons/TCC Client.icon \
             --compile "$out" \
-            --app-icon OneClient \
+            --app-icon TCC Client \
             --output-partial-info-plist "$out/partial.plist" \
             --platform macosx \
             --minimum-deployment-target 26.0 \
             --errors --warnings --notices
-          rm -f "$out/OneClient.icns"
+          rm -f "$out/TCC Client.icns"
           test -f "$out/Assets.car" || { echo "::error::actool produced no Assets.car"; exit 1; }
 
       - name: (Windows) Stage app-local VC++ runtime
@@ -541,17 +541,17 @@ jobs:
           # The updater bundle isn't always arch-tagged by cargo-packager, so the two
           # macOS legs would collide on the release. Rename the updater artifact + its .sig
           # to an arch-unique name before upload, and point the manifest at that name.
-          unique="OneClient_${VERSION}_${OS_KEY}_${ARCH}.${ext}"
+          unique="TCC Client_${VERSION}_${OS_KEY}_${ARCH}.${ext}"
           cp "$updater_file" "$OUT_DIR/$unique"
           cp "$updater_file.sig" "$OUT_DIR/$unique.sig"
 
           # cargo-packager names the .deb after the binary (oneclient_app_<ver>_amd64.deb).
-          # Rename it to the same OneClient_<ver>_<os>_<arch> scheme as the other assets so
+          # Rename it to the same TCC Client_<ver>_<os>_<arch> scheme as the other assets so
           # the AUR oneclient-bin package can point at a stable, predictable URL.
           deb_unique=""
           deb_matches=("$OUT_DIR"/*.deb)
           if [ -e "${deb_matches[0]:-}" ]; then
-            deb_unique="OneClient_${VERSION}_${OS_KEY}_${ARCH}.deb"
+            deb_unique="TCC Client_${VERSION}_${OS_KEY}_${ARCH}.deb"
             cp "${deb_matches[0]}" "$OUT_DIR/$deb_unique"
           fi
 
@@ -560,7 +560,7 @@ jobs:
           rpm_unique=""
           rpm_matches=("$OUT_DIR"/*.rpm)
           if [ -e "${rpm_matches[0]:-}" ]; then
-            rpm_unique="OneClient_${VERSION}_${OS_KEY}_${ARCH}.rpm"
+            rpm_unique="TCC Client_${VERSION}_${OS_KEY}_${ARCH}.rpm"
             cp "${rpm_matches[0]}" "$OUT_DIR/$rpm_unique"
           fi
 

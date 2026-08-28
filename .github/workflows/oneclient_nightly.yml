@@ -1,4 +1,4 @@
-name: OneClient Nightly (Unsigned)
+name: TCC Client Nightly (Unsigned)
 
 
 on:
@@ -122,14 +122,14 @@ jobs:
           set -euo pipefail
           out="packages/oneclient_app/icons/generated"
           mkdir -p "$out"
-          xcrun actool packages/oneclient_app/icons/OneClient.icon \
+          xcrun actool packages/oneclient_app/icons/TCC Client.icon \
             --compile "$out" \
-            --app-icon OneClient \
+            --app-icon TCC Client \
             --output-partial-info-plist "$out/partial.plist" \
             --platform macosx \
             --minimum-deployment-target 26.0 \
             --errors --warnings --notices
-          rm -f "$out/OneClient.icns"
+          rm -f "$out/TCC Client.icns"
           test -f "$out/Assets.car" || { echo "::error::actool produced no Assets.car"; exit 1; }
 
       - name: (Windows) Stage app-local VC++ runtime

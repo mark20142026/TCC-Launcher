@@ -14,8 +14,8 @@ impl Default for NetConfig {
 		Self {
 			curseforge_api_key: constants::CURSEFORGE_API_KEY.to_string(),
 			modrinth_api_key: None,
-			metadata_api_url: constants::METADATA_API_URL.to_string(),
-			meta_url_base: constants::META_URL_BASE.to_string(),
+			metadata_api_url: constants::metadata_api_url().to_string(),
+			meta_url_base: constants::meta_url_base().to_string(),
 		}
 	}
 }
@@ -71,7 +71,7 @@ mod tests {
 
 		assert_eq!(config.curseforge_api_key, constants::CURSEFORGE_API_KEY);
 		assert_eq!(config.modrinth_api_key, None);
-		assert_eq!(config.metadata_api_url, constants::METADATA_API_URL);
+		assert_eq!(config.metadata_api_url, constants::metadata_api_url());
 	}
 
 	#[test]

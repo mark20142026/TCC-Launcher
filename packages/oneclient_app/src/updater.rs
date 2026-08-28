@@ -15,7 +15,7 @@ enum UpdateAnswer {
 fn update_prompt(version: &str) -> Prompt<UpdateAnswer> {
     Prompt::new(
         "Update available",
-        format!("OneClient {version} is ready to install. Download and install it now?"),
+        format!("TCC Client {version} is ready to install. Download and install it now?"),
     )
     .option(
         Choice::primary(UPDATE_CHOICE_INSTALL, "Install"),
@@ -55,7 +55,7 @@ async fn run_simulated_update() -> anyhow::Result<()> {
     }
 
     let progress_id = Uuid::new_v4();
-    let label = format!("Downloading OneClient {FAKE_VERSION}");
+    let label = format!("Downloading TCC Client {FAKE_VERSION}");
 
     let mut downloaded = 0u64;
     events.progress(progress_id, &label, downloaded, FAKE_TOTAL);
@@ -68,7 +68,7 @@ async fn run_simulated_update() -> anyhow::Result<()> {
     events.finish_progress(
         progress_id,
         "Finished Downloading",
-        format!("OneClient {FAKE_VERSION} is ready. Restart to apply."),
+        format!("TCC Client {FAKE_VERSION} is ready. Restart to apply."),
     );
 
     Ok(())
@@ -90,7 +90,7 @@ async fn run_check(auto_install: bool, events: EventBus) -> anyhow::Result<()> {
         events
             .notify("Update available")
             .body(format!(
-                "OneClient {} is available. Download the latest package from {} to update.",
+                "TCC Client {} is available. Download the latest package from {} to update.",
                 update.version, RELEASES_URL
             ))
             .send();
@@ -138,7 +138,7 @@ fn check_for_update() -> anyhow::Result<Option<Update>> {
 async fn download_and_install(update: Update, events: EventBus) -> anyhow::Result<()> {
     let progress_id = Uuid::new_v4();
     let version = update.version.clone();
-    let label = format!("Downloading OneClient {version}");
+    let label = format!("Downloading TCC Client {version}");
 
     events.progress(progress_id, &label, 0, 0);
 
@@ -172,7 +172,7 @@ async fn download_and_install(update: Update, events: EventBus) -> anyhow::Resul
         events.finish_progress(
             progress_id,
             "Finished Downloading",
-            format!("OneClient {version} is ready. Restart to apply."),
+            format!("TCC Client {version} is ready. Restart to apply."),
         );
         Ok(())
     })

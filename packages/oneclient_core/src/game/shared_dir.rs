@@ -505,11 +505,11 @@ async fn ensure_note(dir: &Path, content_type: ContentType) {
         format!(
             "It's empty here, but nothing is broken!\n\
         \n\
-        OneClient keeps your {noun} safe somewhere else (specifically in the global launcher cache)\
+        TCC Client keeps your {noun} safe somewhere else (specifically in the global launcher cache)\
 		and only puts them here while you play. When you close the game, it tidies them away again.\n\
         \n\
-        Want to add {noun}? The best way is to do it right inside OneClient. Or you can drop \
-        files in this folder, and OneClient will pick them up the next time you play.\n"
+        Want to add {noun}? The best way is to do it right inside TCC Client. Or you can drop \
+        files in this folder, and TCC Client will pick them up the next time you play.\n"
         )
     })
     .await

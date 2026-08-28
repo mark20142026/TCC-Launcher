@@ -12,7 +12,7 @@ use super::{ImportTarget, MigrationDetection, MigrationSource, SourceInstance};
 const IMPORT_EXCLUDE_TOP: &[&str] = &["mods", "logs"];
 
 pub fn old_root() -> Option<PathBuf> {
-    let base = directories::BaseDirs::new().map(|d| d.data_dir().join("OneClient"));
+    let base = directories::BaseDirs::new().map(|d| d.data_dir().join("TCC Client"));
 
     let root = match std::env::var("ONECLIENT_V1_DIR") {
         Ok(dir) => PathBuf::from(dir),
@@ -107,7 +107,7 @@ async fn detect_inner(root: &Path, db_path: &Path) -> LauncherResult<MigrationDe
     pool.close().await;
 
     Ok(MigrationDetection {
-        source: MigrationSource::OneClientV1,
+        source: MigrationSource::TCC ClientV1,
         root: root.to_path_buf(),
         instances,
     })
@@ -178,11 +178,11 @@ mod tests {
     #[test]
     fn category_extraction() {
         assert_eq!(
-            category_from_bundle_name("OneClient 1.21.1 Fabric [HUD]"),
+            category_from_bundle_name("TCC Client 1.21.1 Fabric [HUD]"),
             Some("HUD".to_string())
         );
         assert_eq!(
-            category_from_bundle_name("OneClient 1.21.11 Fabric [QoL]"),
+            category_from_bundle_name("TCC Client 1.21.11 Fabric [QoL]"),
             Some("QoL".to_string())
         );
         assert_eq!(category_from_bundle_name("no brackets here"), None);
