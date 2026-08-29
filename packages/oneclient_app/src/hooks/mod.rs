@@ -17,7 +17,7 @@ pub use active_cluster::{
 
 pub use actions::{Actions, NotificationBuilder, PumpSignal};
 pub use queries::{
-    AddOfflineAccountKeys, BROWSE_PAGE_SIZE, BeginMicrosoftLoginMutation, CachedImageQuery,
+    AddOfflineAccountKeys, AddOfflineAccountMutation, BROWSE_PAGE_SIZE, BeginMicrosoftLoginMutation, CachedImageQuery,
     CancelMicrosoftLoginKeys, CancelMicrosoftLoginMutation, ClusterAction, ClusterBundles,
     ClusterLogsQuery, FinishMicrosoftLoginMutation, LogAction, LogContentQuery, MigrationQuery,
     OnboardingBundlesQuery, RefreshAccountKeys, RemoveAccountKeys, ScreenshotAction,

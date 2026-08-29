@@ -5,6 +5,7 @@ use oneclient_auth::MinecraftAccount;
 use crate::components::{Avatar, Button, Icon, IconType, TextInput, use_microsoft_login};
 use crate::hooks::{
     try_default_account, use_add_offline_account, use_current_account, AddOfflineAccountKeys,
+    AddOfflineAccountMutation,
 };
 use crate::routes::Route;
 use crate::theme::colors;
@@ -20,9 +21,9 @@ impl Component for OnboardingAccount {
         let account_query = use_current_account();
         let msa = use_microsoft_login();
         let add_offline = use_add_offline_account();
-        let show_offline = use_state(|| true);
-        let username = use_state(String::new);
-        let closing_offline = use_state(|| false);
+        let mut show_offline = use_state(|| true);
+        let mut username = use_state(String::new);
+        let mut closing_offline = use_state(|| false);
 
         use_side_effect(move || {
             if !*closing_offline.read() {
@@ -65,7 +66,7 @@ impl Component for OnboardingAccount {
                         .into_element()
                     } else {
                         let start = msa.clone();
-                        let show_offline_clone = show_offline.clone();
+                        let mut show_offline_clone = show_offline.clone();
                         sign_in_options(
                             msa.pending,
                             msa.error.clone(),
@@ -182,18 +183,32 @@ fn sign_in_options(
 }
 
 fn offline_form(
-    username: State<String>,
-    add_offline: UseMutation<crate::hooks::queries::auth::AddOfflineAccountMutation>,
-    show_offline: State<bool>,
-    closing_offline: State<bool>,
+    mut username: State<String>,
+    add_offline: UseMutation<AddOfflineAccountMutation>,
+    mut show_offline: State<bool>,
+    mut closing_offline: State<bool>,
 ) -> impl IntoElement {
-    let on_submit = move |_| {
+    let on_submit_button = move |_| {
         let name = username.peek().trim().to_string();
         if name.is_empty() {
             return;
         }
         add_offline.mutate(AddOfflineAccountKeys { username: name });
         closing_offline.set(true);
+    };
+
+    let on_submit_input = {
+        let mut username = username.clone();
+        let add_offline = add_offline.clone();
+        let mut closing_offline = closing_offline.clone();
+        move |_: String| {
+            let name = username.peek().trim().to_string();
+            if name.is_empty() {
+                return;
+            }
+            add_offline.mutate(AddOfflineAccountKeys { username: name });
+            closing_offline.set(true);
+        }
     };
 
     let on_back = move |_| {
@@ -214,7 +229,7 @@ fn offline_form(
             TextInput::new(username)
                 .placeholder("Username (3-16 characters)")
                 .font_size(16.)
-                .on_submit(on_submit.clone()),
+                .on_submit(on_submit_input),
         )
         .child(
             rect()
@@ -229,7 +244,7 @@ fn offline_form(
                 .child(
                     Button::new()
                         .primary()
-                        .on_press(on_submit)
+                        .on_press(on_submit_button)
                         .text("Add Offline Account"),
                 ),
         )
