@@ -1,0 +1,112 @@
+name: TCC Windows Build
+
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: tcc-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_PROFILE_RELEASE_LTO: thin
+  CARGO_PROFILE_RELEASE_CODEGEN_UNITS: '16'
+
+jobs:
+  build:
+    permissions:
+      contents: read
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup Rust
+        uses: ./.github/actions/setup-rust
+        with:
+          save-cache: true
+          restore-cache: true
+          cache-namespace: nightly-cache
+
+      - name: Install cargo-packager
+        uses: ./.github/actions/install-cargo-tool
+        with:
+          tool: cargo-packager
+          version: 0.11.8
+
+      - name: Build release binary
+        shell: bash
+        run: cargo build --release --bin oneclient_app
+
+      - name: Stage app-local VC++ runtime
+        shell: bash
+        run: python3 distribution/windows/bundle-crt.py
+
+      - name: Verify staged runtime is Microsoft-signed
+        shell: pwsh
+        run: |
+          $dlls = @(Get-ChildItem 'target/crt/*.dll')
+          if ($dlls.Count -eq 0) { Write-Error 'no CRT DLLs staged'; exit 1 }
+          foreach ($dll in $dlls) {
+            $sig = Get-AuthenticodeSignature $dll.FullName
+            Write-Host "$($dll.Name): $($sig.Status) $($sig.SignerCertificate.Subject)"
+            if ($sig.Status -ne 'Valid') {
+              Write-Error "$($dll.Name) signature is $($sig.Status), refusing to ship it"
+              exit 1
+            }
+            if ($sig.SignerCertificate.Subject -notmatch 'O=Microsoft Corporation') {
+              Write-Error "$($dll.Name) is not signed by Microsoft"
+              exit 1
+            }
+          }
+
+      - name: Package (unsigned)
+        shell: bash
+        env:
+          CI: 'true'
+        run: cargo packager --release --formats nsis --verbose
+
+      - name: Smoke-test installer layout
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dest = 'C:\oneclient-smoke'
+          Remove-Item -Recurse -Force $dest -ErrorAction SilentlyContinue
+          $exe = Resolve-Path (Get-ChildItem 'target/release/*-setup.exe')[0].FullName
+          $p = Start-Process -FilePath $exe -ArgumentList '/S', "/D=$dest" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { Write-Error "installer exited $($p.ExitCode)"; exit 1 }
+
+          if (-not (Test-Path "$dest\oneclient_app.exe")) {
+            Write-Error "oneclient_app.exe is not at the root of $dest"
+            exit 1
+          }
+          foreach ($dll in @(Get-ChildItem 'target/crt/*.dll')) {
+            if (-not (Test-Path (Join-Path $dest $dll.Name))) {
+              Write-Error "$($dll.Name) did not land beside oneclient_app.exe"
+              exit 1
+            }
+          }
+          Write-Host "OK: $($(Get-ChildItem 'target/crt/*.dll').Count) CRT DLLs sit beside oneclient_app.exe"
+
+      - name: Collect installers
+        id: collect
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          for f in target/release/*-setup.exe; do
+            [ -e "$f" ] || continue
+            cp "$f" dist/
+          done
+          if [ -z "$(ls -A dist)" ]; then
+            echo "::error::No installers found"
+            exit 1
+          fi
+          ls -la dist
+
+      - name: Upload unsigned installer
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: tcc-windows-installer
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
