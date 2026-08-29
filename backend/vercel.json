@@ -6,6 +6,11 @@
     { "source": "/oneclient/tos.json", "destination": "/api/tos" },
     { "source": "/oneclient/latest.json", "destination": "/api/latest" },
     { "source": "/health", "destination": "/api/health" },
+    { "source": "/minecraft/v0/manifest.json", "destination": "/api/minecraft" },
+    { "source": "/forge/v0/manifest.json", "destination": "/api/forge" },
+    { "source": "/fabric/v0/manifest.json", "destination": "/api/fabric" },
+    { "source": "/neo/v0/manifest.json", "destination": "/api/neo" },
+    { "source": "/quilt/v0/manifest.json", "destination": "/api/quilt" },
     { "source": "/(.*)", "destination": "/api/proxy?path=$1" }
   ],
   "headers": [
