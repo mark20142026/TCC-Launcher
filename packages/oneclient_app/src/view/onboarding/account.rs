@@ -1,10 +1,10 @@
 use freya::prelude::*;
+use freya::query::{MutationCapability, MutationStateData, UseMutation};
 use oneclient_auth::MinecraftAccount;
 
 use crate::components::{Avatar, Button, Icon, IconType, TextInput, use_microsoft_login};
 use crate::hooks::{
-    try_default_account, use_add_offline_account, use_current_account,
-    AddOfflineAccountKeys,
+    try_default_account, use_add_offline_account, use_current_account, AddOfflineAccountKeys,
 };
 use crate::routes::Route;
 use crate::theme::colors;
@@ -20,9 +20,26 @@ impl Component for OnboardingAccount {
         let account_query = use_current_account();
         let msa = use_microsoft_login();
         let add_offline = use_add_offline_account();
-        let show_offline = use_state(|| false);
-        let username = use_state(|| String::new());
-        let offline_error = use_state(|| None::<String>);
+        let show_offline = use_state(|| true);
+        let username = use_state(String::new);
+        let closing_offline = use_state(|| false);
+
+        use_side_effect(move || {
+            if !*closing_offline.read() {
+                return;
+            }
+            match &*add_offline.read().state() {
+                MutationStateData::Settled { res: Ok(_), .. } => {
+                    closing_offline.set(false);
+                    show_offline.set(false);
+                    username.set(String::new());
+                }
+                MutationStateData::Settled { res: Err(_), .. } => {
+                    closing_offline.set(false);
+                }
+                _ => {}
+            }
+        });
 
         let account = try_default_account(&account_query);
         let has_account = account.is_some();
@@ -33,7 +50,7 @@ impl Component for OnboardingAccount {
             .spacing(24.)
             .child(step_heading(
                 "Account",
-                "Before you continue, we require you to own a copy of Minecraft: Java Edition.",
+                "Enter a username to get started. You can sign in with Microsoft later.",
             ))
             .child(match &account {
                 Some(account) => account_preview(account).into_element(),
@@ -41,10 +58,11 @@ impl Component for OnboardingAccount {
                     if *show_offline.read() {
                         offline_form(
                             username,
-                            offline_error,
                             add_offline,
                             show_offline,
-                        ).into_element()
+                            closing_offline,
+                        )
+                        .into_element()
                     } else {
                         let start = msa.clone();
                         let show_offline_clone = show_offline.clone();
@@ -53,7 +71,8 @@ impl Component for OnboardingAccount {
                             msa.error.clone(),
                             move |_| start.start(),
                             move |_| show_offline_clone.set(true),
-                        ).into_element()
+                        )
+                        .into_element()
                     }
                 }
             })
@@ -164,22 +183,17 @@ fn sign_in_options(
 
 fn offline_form(
     username: State<String>,
-    error: State<Option<String>>,
-    add_offline: UseMutation<AddOfflineAccountMutation>,
+    add_offline: UseMutation<crate::hooks::queries::auth::AddOfflineAccountMutation>,
     show_offline: State<bool>,
+    closing_offline: State<bool>,
 ) -> impl IntoElement {
-    use oneclient_auth::validate_offline_username;
-
-    let error_text = error.read().clone();
     let on_submit = move |_| {
-        let name = username.read().trim().to_string();
-        if let Err(err) = validate_offline_username(&name) {
-            error.set(Some(err.to_string()));
+        let name = username.peek().trim().to_string();
+        if name.is_empty() {
             return;
         }
-        error.set(None);
         add_offline.mutate(AddOfflineAccountKeys { username: name });
-        show_offline.set(false);
+        closing_offline.set(true);
     };
 
     let on_back = move |_| {
@@ -191,12 +205,16 @@ fn offline_form(
         .spacing(12.)
         .cross_align(Alignment::Start)
         .child(
+            label()
+                .text("Enter a username for offline play:")
+                .font_size(13.)
+                .color(colors::fg_secondary()),
+        )
+        .child(
             TextInput::new(username)
-                .placeholder("Username")
+                .placeholder("Username (3-16 characters)")
                 .font_size(16.)
-                .padding(8.)
-                .width(Size::px(200.))
-                .on_submit(on_submit.clone())
+                .on_submit(on_submit.clone()),
         )
         .child(
             rect()
@@ -206,27 +224,14 @@ fn offline_form(
                     Button::new()
                         .secondary()
                         .on_press(on_back)
-                        .text("Back")
+                        .text("Back"),
                 )
                 .child(
                     Button::new()
                         .primary()
                         .on_press(on_submit)
-                        .text("Add Offline Account")
-                )
+                        .text("Add Offline Account"),
+                ),
         )
-        .maybe_child(error_text.map(|message| {
-            rect()
-                .horizontal()
-                .cross_align(Alignment::Center)
-                .spacing(6.)
-                .child(
-                    Icon::new(IconType::AlertTriangle)
-                        .size(13.)
-                        .color(colors::danger()),
-                )
-                .child(label().text(message).font_size(12.).color(colors::danger()))
-                .into_element()
-        }))
         .into_element()
 }
