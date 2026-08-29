@@ -12,7 +12,7 @@ pub const CURSEFORGE_API_URL: &str = "https://api.curseforge.com/v1";
 pub const CURSEFORGE_GAME_ID: u32 = 432;
 pub fn metadata_api_url() -> &'static str {
   static URL: std::sync::OnceLock<String> = std::sync::OnceLock::new();
-  URL.get_or_init(|| std::env::var("TCC_META_URL").unwrap_or_else(|_| "https://meta.theazizi.space".to_string())).as_str()
+  URL.get_or_init(|| std::env::var("TCC_META_URL").unwrap_or_else(|_| "https://api.theazizi.space".to_string())).as_str()
 }
 pub const MCLOGS_API_URL: &str = "https://api.mclo.gs/1";
 pub const SKYCLIENT_BASE_URL: &str =
@@ -25,7 +25,7 @@ pub const TOS_URL: &str = "https://theazizi.space/legal/terms";
 pub const PRIVACY_URL: &str = "https://theazizi.space/legal/privacy";
 pub fn plus_backend_url() -> &'static str {
   static URL: std::sync::OnceLock<String> = std::sync::OnceLock::new();
-  URL.get_or_init(|| std::env::var("TCC_PLUS_URL").unwrap_or_else(|_| "https://plus.polyfrost.org".to_string())).as_str()
+  URL.get_or_init(|| std::env::var("TCC_PLUS_URL").unwrap_or_else(|_| "https://api.theazizi.space".to_string())).as_str()
 }
 
 pub const SENTRY_DSN: &str = match option_env!("ONECLIENT_SENTRY_DSN") {

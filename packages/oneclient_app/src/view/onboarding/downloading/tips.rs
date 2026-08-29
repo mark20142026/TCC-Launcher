@@ -25,7 +25,7 @@ const ONBOARDING_TIPS_BACKUP: &[&str] = &[
 ];
 
 const FUNFACTS_URL: &str =
-    "https://data-v2.polyfrost.org/oneclient/funfacts.txt";
+    "https://api.theazizi.space/oneclient/funfacts.txt";
 
 fn normalize_line_breaks(value: &str) -> String {
     value.replace("/n", "\n").replace("\\n", "\n")

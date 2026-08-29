@@ -170,8 +170,7 @@ impl Worker {
 				Assets::new()
 					.large_image(LARGE_IMAGE)
 					.large_text("TCC Client"),
-			)
-			.buttons(vec![Button::new("Website", "https://polyfrost.org/")]);
+			)					.buttons(vec![Button::new("Website", "https://theazizi.space/")]);
 
 		if let Err(err) = self.client.set_activity(activity) {
 			tracing::warn!("Discord RPC set_activity failed: {err}");

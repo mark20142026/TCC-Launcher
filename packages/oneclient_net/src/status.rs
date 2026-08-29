@@ -13,7 +13,7 @@ fn polyfrost_status_url() -> &'static str {
     POLYFROST_STATUS_URL.get_or_init(|| {
         std::env::var_os("TCC_STATUS_URL")
             .and_then(|v| v.into_string().ok())
-            .unwrap_or_else(|| "https://status.polyfrost.org/index.json".to_string())
+            .unwrap_or_else(|| "https://api.theazizi.space/status/index.json".to_string())
     })
 }
 

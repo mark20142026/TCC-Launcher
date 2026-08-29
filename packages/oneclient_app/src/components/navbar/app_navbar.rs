@@ -101,7 +101,7 @@ fn navbar_center() -> impl IntoElement {
         })
         .child(NavLink {
             active: false,
-            target: NavTarget::External("https://store.polyfrost.org"),
+            target: NavTarget::External("https://store.theazizi.space"),
             nav_label: "Cosmetics",
         })
         .child(NavLink {
