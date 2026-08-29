@@ -1,8 +1,11 @@
 use freya::prelude::*;
 use oneclient_auth::MinecraftAccount;
 
-use crate::components::{Avatar, Button, Icon, IconType, use_microsoft_login, TextInput};
-use crate::hooks::{try_default_account, use_current_account, use_add_offline_account};
+use crate::components::{Avatar, Button, Icon, IconType, TextInput, use_microsoft_login};
+use crate::hooks::{
+    try_default_account, use_add_offline_account, use_current_account,
+    AddOfflineAccountKeys,
+};
 use crate::routes::Route;
 use crate::theme::colors;
 use crate::view::onboarding::{
@@ -39,7 +42,7 @@ impl Component for OnboardingAccount {
                         offline_form(
                             username,
                             offline_error,
-                            add_offline.clone(),
+                            add_offline,
                             show_offline,
                         ).into_element()
                     } else {
@@ -140,7 +143,7 @@ fn sign_in_options(
                 .large()
                 .enabled(!pending)
                 .on_press(on_offline)
-                .child(Icon::new(IconType::User).size(16.))
+                .child(Icon::new(IconType::Users01).size(16.))
                 .text("Use Offline Account"),
         )
         .maybe_child(error.map(|message| {
@@ -166,7 +169,6 @@ fn offline_form(
     show_offline: UseState<bool>,
 ) -> impl IntoElement {
     use oneclient_auth::validate_offline_username;
-    use crate::hooks::queries::auth::AddOfflineAccountKeys;
 
     let error_text = error.read().clone();
     let on_submit = move |_| {
