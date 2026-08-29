@@ -163,10 +163,10 @@ fn sign_in_options(
 }
 
 fn offline_form(
-    username: UseState<String>,
-    error: UseState<Option<String>>,
+    username: State<String>,
+    error: State<Option<String>>,
     add_offline: UseMutation<AddOfflineAccountMutation>,
-    show_offline: UseState<bool>,
+    show_offline: State<bool>,
 ) -> impl IntoElement {
     use oneclient_auth::validate_offline_username;
 
