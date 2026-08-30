@@ -26,7 +26,7 @@ function getMetadataLoader(path) {
 // Input: [{version: "1.21", stable: true}, ...]
 // Output: {game_versions: [{id: "1.21", stable: true, loaders: [{id, url, stable}]}]}
 function transformFabricLike(data, loaderBase) {
-  if (!Array.isArray(data)) return { game_versions: [] };
+  if (!Array.isArray(data)) return { gameVersions: [] };
 
   const game_versions = [];
   for (const entry of data) {
@@ -44,7 +44,7 @@ function transformFabricLike(data, loaderBase) {
       }],
     });
   }
-  return { game_versions };
+  return { gameVersions: game_versions };
 }
 
 // Transform Forge Maven XML to interfrost ModdedManifest format
@@ -79,7 +79,7 @@ function transformForgeMeta(xml) {
       }],
     });
   }
-  return { game_versions };
+  return { gameVersions: game_versions };
 }
 
 // Transform NeoForge Maven XML to interfrost ModdedManifest format
@@ -113,7 +113,7 @@ function transformNeoForgeMeta(xml) {
       }],
     });
   }
-  return { game_versions };
+  return { gameVersions: game_versions };
 }
 
 export default async function handler(req, res) {
