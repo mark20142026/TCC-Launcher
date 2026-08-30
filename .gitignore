@@ -5,3 +5,7 @@ OneLauncher.iml
 
 /packages/oneclient_app/icons/generated/
 .env
+
+# Temp files
+*.ps1
+dist/

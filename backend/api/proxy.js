@@ -5,12 +5,12 @@ import { cors, proxy, UPSTREAM_DATA } from './_lib.js';
 const METADATA_LOADERS = {
   minecraft: {
     upstream: 'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json',
-    transform: null // No transform needed, Mojang format matches
   },
-  forge: { upstream: 'https://files.minecraftforge.net/maven/net/minecraftforge/forge/json' },
-  fabric: { upstream: 'https://meta.fabricmc.net/2/game/versions' },
+  forge: { upstream: 'https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml' },
+  fabric: { upstream: 'https://meta.fabricmc.net/v2/versions/game' },
   neo: { upstream: 'https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml' },
-  quilt: { upstream: 'https://meta.quiltmc.org/2/game/versions' }
+  quilt: { upstream: 'https://meta.quiltmc.org/v3/versions/game' },
+  legacyfabric: { upstream: 'https://meta.fabricmc.net/v2/versions/game' },
 };
 
 // Check if this is a metadata manifest request
@@ -22,59 +22,62 @@ function getMetadataLoader(path) {
   return null;
 }
 
-// Transform Fabric/Quilt meta format to interfrost ModdedManifest format
-function transformFabricMeta(data) {
-  const game_versions = [];
-  for (const [mcVersion, info] of Object.entries(data)) {
-    if (!info || typeof info !== 'object') continue;
-    if (info.stable === false) continue;
+// Transform Fabric v2 game versions array to interfrost ModdedManifest format
+// Input: [{version: "1.21", stable: true}, ...]
+// Output: {game_versions: [{id: "1.21", stable: true, loaders: [{id, url, stable}]}]}
+function transformFabricLike(data, loaderBase) {
+  if (!Array.isArray(data)) return { game_versions: [] };
 
-    const loaderList = [];
-    if (info.loader && info.loader.version) {
-      loaderList.push({
-        id: info.loader.version,
-        url: `https://meta.fabricmc.net/2/loader/${mcVersion}/${info.loader.version}/profile/json`,
-        stable: info.loader.stable !== false
-      });
-    }
-    if (info.loaders && Array.isArray(info.loaders)) {
-      for (const loader of info.loaders) {
-        if (loader.version) {
-          loaderList.push({
-            id: loader.version,
-            url: `https://meta.fabricmc.net/2/loader/${mcVersion}/${loader.version}/profile/json`,
-            stable: loader.stable !== false
-          });
-        }
-      }
-    }
-    if (loaderList.length > 0) {
-      game_versions.push({ id: mcVersion, stable: true, loaders: loaderList });
-    }
+  const game_versions = [];
+  for (const entry of data) {
+    if (!entry.stable) continue;
+
+    const mcVersion = entry.version;
+    // Use latest known stable loader version and construct profile URL
+    game_versions.push({
+      id: mcVersion,
+      stable: true,
+      loaders: [{
+        id: 'latest',
+        url: `${loaderBase}/${mcVersion}/latest/profile/json`,
+        stable: true,
+      }],
+    });
   }
   return { game_versions };
 }
 
-// Transform Forge JSON format to interfrost ModdedManifest format
-function transformForgeMeta(data) {
-  const game_versions = [];
-  for (const [mcVersion, loaders] of Object.entries(data)) {
-    if (mcVersion === 'homepage' || mcVersion === 'webpage') continue;
-    if (!loaders || typeof loaders !== 'object') continue;
+// Transform Forge Maven XML to interfrost ModdedManifest format
+function transformForgeMeta(xml) {
+  const versions = [];
+  const versionRegex = /<version>([^<]+)<\/version>/g;
+  let match;
+  while ((match = versionRegex.exec(xml)) !== null) {
+    versions.push(match[1]);
+  }
 
-    const loaderList = [];
-    for (const [loaderId, info] of Object.entries(loaders)) {
-      if (info && info.id) {
-        loaderList.push({
-          id: info.id || loaderId,
-          url: info.url || `https://files.minecraftforge.net/maven/net/minecraftforge/forge/${info.id}/forge-${info.id}-installer.jar`,
-          stable: true
-        });
-      }
-    }
-    if (loaderList.length > 0) {
-      game_versions.push({ id: mcVersion, stable: true, loaders: loaderList });
-    }
+  // Group by MC version (format: "1.21-51.0.33")
+  const mcVersionMap = {};
+  for (const v of versions) {
+    const dashIdx = v.indexOf('-');
+    if (dashIdx === -1) continue;
+    const mcVersion = v.substring(0, dashIdx);
+    if (!mcVersionMap[mcVersion]) mcVersionMap[mcVersion] = [];
+    mcVersionMap[mcVersion].push(v);
+  }
+
+  const game_versions = [];
+  for (const [mcVersion, loaders] of Object.entries(mcVersionMap)) {
+    const latestLoader = loaders[0]; // Maven metadata sorts newest first
+    game_versions.push({
+      id: mcVersion,
+      stable: true,
+      loaders: [{
+        id: latestLoader,
+        url: `https://maven.minecraftforge.net/net/minecraftforge/forge/${latestLoader}/forge-${latestLoader}-installer.jar`,
+        stable: true,
+      }],
+    });
   }
   return { game_versions };
 }
@@ -90,25 +93,24 @@ function transformNeoForgeMeta(xml) {
 
   const mcVersionMap = {};
   for (const v of versions) {
-    const parts = v.split('-');
-    if (parts.length >= 2) {
-      const mcVersion = parts[0];
-      if (!mcVersionMap[mcVersion]) mcVersionMap[mcVersion] = [];
-      mcVersionMap[mcVersion].push(v);
-    }
+    const dashIdx = v.indexOf('-');
+    if (dashIdx === -1) continue;
+    const mcVersion = v.substring(0, dashIdx);
+    if (!mcVersionMap[mcVersion]) mcVersionMap[mcVersion] = [];
+    mcVersionMap[mcVersion].push(v);
   }
 
   const game_versions = [];
   for (const [mcVersion, loaders] of Object.entries(mcVersionMap)) {
-    const latestLoader = loaders[loaders.length - 1];
+    const latestLoader = loaders[0]; // Maven metadata sorts newest first
     game_versions.push({
       id: mcVersion,
       stable: true,
       loaders: [{
         id: latestLoader,
         url: `https://maven.neoforged.net/releases/net/neoforged/neoforge/${latestLoader}/neoforge-${latestLoader}-installer.jar`,
-        stable: true
-      }]
+        stable: true,
+      }],
     });
   }
   return { game_versions };
@@ -119,37 +121,40 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   const path = req.query.path || '';
-  
+
   // Check if this is a metadata manifest request
   const loader = getMetadataLoader(path);
   if (loader) {
     try {
       const config = METADATA_LOADERS[loader];
       const upstream = await fetch(config.upstream, {
-        headers: { 'User-Agent': 'TCC-Client/2.2.3' }
+        headers: { 'User-Agent': 'TCC-Client/2.2.3' },
       });
-      
+
       if (!upstream.ok) {
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Cache-Control', 'public, max-age=60');
         return res.end(JSON.stringify({ game_versions: [] }));
       }
-      
+
       let data;
       if (loader === 'neo') {
         const xml = await upstream.text();
         data = transformNeoForgeMeta(xml);
       } else if (loader === 'forge') {
+        const xml = await upstream.text();
+        data = transformForgeMeta(xml);
+      } else if (loader === 'fabric' || loader === 'legacyfabric') {
         const json = await upstream.json();
-        data = transformForgeMeta(json);
-      } else if (loader === 'fabric' || loader === 'quilt') {
+        data = transformFabricLike(json, 'https://meta.fabricmc.net/v2/versions/loader');
+      } else if (loader === 'quilt') {
         const json = await upstream.json();
-        data = transformFabricMeta(json);
+        data = transformFabricLike(json, 'https://meta.quiltmc.org/v3/versions/loader');
       } else {
         // minecraft - Mojang format matches directly
         data = await upstream.json();
       }
-      
+
       res.setHeader('Content-Type', 'application/json');
       res.setHeader('Cache-Control', 'public, max-age=300');
       return res.end(JSON.stringify(data));
@@ -159,7 +164,7 @@ export default async function handler(req, res) {
       return res.end(JSON.stringify({ game_versions: [] }));
     }
   }
-  
+
   // Default: proxy to upstream data host
   const query = new URLSearchParams(req.query);
   query.delete('path');

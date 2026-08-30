@@ -9,7 +9,7 @@ const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 export const UPSTREAM_META = 'https://meta.theazizi.space';
 export const UPSTREAM_DATA = 'https://data-v2.polyfrost.org';
 export const UPSTREAM_LATEST =
-  'https://github.com/Polyfrost/OneLauncher/releases/latest/download/latest.json';
+  'https://github.com/pnbx/TCC-Launcher/releases/latest/download/latest.json';
 
 export function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

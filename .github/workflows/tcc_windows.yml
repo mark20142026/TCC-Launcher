@@ -2,6 +2,8 @@ name: TCC Windows Build
 
 
 on:
+  push:
+    branches: [main, tcc-launcher-fork]
   workflow_dispatch:
 
 concurrency:
@@ -15,7 +17,7 @@ env:
 jobs:
   build:
     permissions:
-      contents: read
+      contents: write
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -110,3 +112,26 @@ jobs:
           path: dist/*
           if-no-files-found: error
           retention-days: 14
+
+      - name: Create GitHub Release
+        permissions:
+          contents: write
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(grep '^version' Cargo.toml | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
+          TAG="v${VERSION}"
+          echo "Creating release for version $VERSION (tag $TAG)"
+
+          # Create release (ignore if tag already exists)
+          gh release create "$TAG" dist/* \
+            --repo "${{ github.repository }}" \
+            --title "TCC Client $VERSION" \
+            --notes "TCC Client $VERSION - Windows Installer" \
+            --latest \
+            2>/dev/null || echo "Release $TAG already exists, uploading to existing release"
+
+          # If release already existed, upload assets to it
+          gh release upload "$TAG" dist/* \
+            --repo "${{ github.repository }}" \
+            --clobber 2>/dev/null || true
