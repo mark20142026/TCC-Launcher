@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = async (req, res) => {
   try {
-    const html = fs.readFileSync(path.join(__dirname, '..', 'public', 'store', 'index.html'), 'utf-8');
+    const html = fs.readFileSync(path.join(__dirname, '..', 'pages', 'store.html'), 'utf-8');
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
     return res.status(200).send(html);

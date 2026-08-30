@@ -4,16 +4,16 @@ const path = require('path');
 module.exports = async (req, res) => {
   try {
     const host = (req.headers.host || req.headers['x-forwarded-host'] || '').toLowerCase();
-    const url = req.url || '/';
 
-    // If store domain, redirect / to /store
-    if (host.startsWith('store.') && url === '/') {
-      res.writeHead(302, { Location: '/store' });
-      return res.end();
+    // If store domain, serve store page
+    if (host.startsWith('store.')) {
+      const html = fs.readFileSync(path.join(__dirname, '..', 'pages', 'store.html'), 'utf-8');
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+      return res.status(200).send(html);
     }
 
-    const filePath = path.join(__dirname, '..', 'public', 'index.html');
-    const html = fs.readFileSync(filePath, 'utf-8');
+    const html = fs.readFileSync(path.join(__dirname, '..', 'pages', 'landing.html'), 'utf-8');
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
     return res.status(200).send(html);
