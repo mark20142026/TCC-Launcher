@@ -115,6 +115,7 @@ jobs:
           retention-days: 14
 
       - name: Create GitHub Release
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
