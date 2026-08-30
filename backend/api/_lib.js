@@ -33,7 +33,7 @@ export async function supabaseSelect(table, searchParams) {
 
 export async function proxy(req, res, upstreamUrl) {
   const headers = {};
-  const passthrough = ['if-none-match', 'if-modified-since', 'range', 'accept', 'user-agent'];
+  const passthrough = ['if-none-match', 'if-modified-since', 'range', 'accept', 'user-agent', 'authorization', 'content-type'];
   for (const key of passthrough) {
     const value = req.headers[key];
     if (value) headers[key] = value;
@@ -42,8 +42,16 @@ export async function proxy(req, res, upstreamUrl) {
   // body we stream; fetch's auto-decompression would otherwise desync them.
   headers['accept-encoding'] = 'identity';
 
-  const method = req.method === 'HEAD' ? 'HEAD' : 'GET';
-  const upstream = await fetch(upstreamUrl, { method, headers, redirect: 'follow' });
+  const method = req.method === 'HEAD' ? 'HEAD' : req.method || 'GET';
+
+  const fetchOpts = { method, headers, redirect: 'follow' };
+
+  // Forward request body for POST/PUT/PATCH
+  if (['POST', 'PUT', 'PATCH'].includes(method) && req.body) {
+    fetchOpts.body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+  }
+
+  const upstream = await fetch(upstreamUrl, fetchOpts);
 
   res.statusCode = upstream.status;
   for (const key of ['content-type', 'content-length', 'etag', 'last-modified', 'content-range', 'accept-ranges']) {
