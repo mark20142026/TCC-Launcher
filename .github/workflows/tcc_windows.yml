@@ -6,6 +6,9 @@ on:
     branches: [main, tcc-launcher-fork]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 concurrency:
   group: tcc-windows-${{ github.ref }}
   cancel-in-progress: true
@@ -16,8 +19,6 @@ env:
 
 jobs:
   build:
-    permissions:
-      contents: write
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -114,8 +115,6 @@ jobs:
           retention-days: 14
 
       - name: Create GitHub Release
-        permissions:
-          contents: write
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
