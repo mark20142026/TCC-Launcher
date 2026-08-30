@@ -4,8 +4,10 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/", "destination": "/api/landing" },
+    { "source": "/images/(.*)", "destination": "/api/store-images?path=$1" },
     { "source": "/store", "destination": "/api/store-page" },
     { "source": "/store/", "destination": "/api/store-page" },
+    { "source": "/store/images/(.*)", "destination": "/api/store-images?path=$1" },
     { "source": "/oneclient/CHANGE_LOG.md", "destination": "/api/changelog" },
     { "source": "/oneclient/tos.json", "destination": "/api/tos" },
     { "source": "/oneclient/latest.json", "destination": "/api/latest" },
