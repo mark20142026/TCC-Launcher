@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg: #0a0a0f;
       --surface: rgba(255,255,255,0.04);
@@ -25,7 +24,6 @@
       --radius: 12px;
       --max-w: 1200px;
     }
-
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
@@ -34,626 +32,172 @@
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
     }
-
     a { color: inherit; text-decoration: none; }
-
-    /* ── Header ── */
     .header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       background: rgba(10,10,15,0.85);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
     }
     .header-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      max-width: var(--max-w); margin: 0 auto;
+      padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .logo {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--accent);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-    .search-bar {
-      position: relative;
-      width: 320px;
-    }
-    .search-bar input {
-      width: 100%;
-      padding: 8px 12px 8px 36px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .search-bar input:focus { border-color: var(--accent); }
-    .search-bar input::placeholder { color: var(--text-muted); }
-    .search-bar svg {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-    }
-
-    /* ── Category Nav ── */
-    .categories {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 32px 24px 0;
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .categories::-webkit-scrollbar { display: none; }
-    .cat-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.2s;
-      flex-shrink: 0;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-family: inherit;
-    }
-    .cat-btn:hover, .cat-btn.active {
-      background: var(--surface);
-      color: var(--text);
-    }
-    .cat-btn.active { color: var(--accent); }
-    .cat-btn img {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-    .cat-btn span {
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    /* ── Hero Banner ── */
+    .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
     .hero {
-      max-width: var(--max-w);
-      margin: 32px auto 0;
-      padding: 0 24px;
-    }
-    .hero-card {
-      position: relative;
-      border-radius: var(--radius);
-      overflow: hidden;
-      height: 280px;
-      display: flex;
-      align-items: flex-end;
-      background: linear-gradient(135deg, #1a1040 0%, #0d0d1a 100%);
-    }
-    .hero-card img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.6;
-    }
-    .hero-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
-    }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      padding: 32px;
-      width: 100%;
+      text-align: center; padding: 80px 24px 60px;
+      background: linear-gradient(180deg, rgba(108,92,231,0.08) 0%, transparent 100%);
     }
     .hero-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      background: var(--green);
-      color: #000;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
+      display: inline-block; padding: 6px 16px; border-radius: 20px;
+      background: var(--green-bg); color: var(--green);
+      font-size: 13px; font-weight: 600; margin-bottom: 16px;
     }
-    .hero-content h1 {
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
+    .hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 16px; line-height: 1.1; }
+    .hero p { font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto 32px; }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: var(--radius);
+      background: var(--accent); color: white;
+      font-size: 16px; font-weight: 600; transition: all .2s;
     }
-    .hero-content p {
-      color: var(--text-muted);
-      font-size: 15px;
-      max-width: 500px;
+    .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--accent-glow); }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .section { padding: 60px 0; }
+    .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .section-sub { color: var(--text-muted); margin-bottom: 32px; }
+    .categories {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
     }
-
-    /* ── Section ── */
-    .section {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 40px 24px 0;
+    .category-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      transition: all .2s; cursor: default;
     }
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .section-header h2 {
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .section-header .count {
-      color: var(--text-muted);
-      font-size: 13px;
-    }
-
-    /* ── Grid ── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-    }
-
-    /* ── Item Card ── */
-    .item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: transform 0.2s, border-color 0.2s;
-      cursor: pointer;
-    }
-    .item:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.15);
-    }
-    .item-img {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      background: rgba(255,255,255,0.03);
-    }
-    .item-body {
-      padding: 14px 16px 16px;
-    }
-    .item-name {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .item-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .item-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .item-type {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 500;
-    }
-    .item-price {
-      padding: 3px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .price-free {
-      background: var(--green-bg);
-      color: var(--green);
-    }
-
-    /* ── Modal ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px);
-      justify-content: center;
-      align-items: center;
-      padding: 24px;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: #141420;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      max-width: 480px;
-      width: 100%;
-      overflow: hidden;
-    }
-    .modal-img {
-      width: 100%;
-      aspect-ratio: 16/10;
-      object-fit: cover;
-    }
-    .modal-body {
-      padding: 24px;
-    }
-    .modal-body h2 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .modal-body p {
-      color: var(--text-muted);
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-    .modal-variants {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .variant-btn {
-      padding: 6px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      font-size: 13px;
-      font-family: inherit;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .variant-btn:hover, .variant-btn.active {
+    .category-card:hover {
+      background: var(--surface-hover);
       border-color: var(--accent);
-      background: var(--accent-glow);
+      transform: translateY(-4px);
     }
-    .claim-btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: var(--green);
-      color: #000;
-      font-size: 15px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      transition: opacity 0.2s;
+    .category-icon { font-size: 40px; margin-bottom: 12px; }
+    .category-name { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .category-desc { color: var(--text-muted); font-size: 14px; }
+    .how-it-works {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 40px;
+      margin: 40px 0;
     }
-    .claim-btn:hover { opacity: 0.9; }
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: none;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 24px; }
+    .step { text-align: center; }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--accent); color: white;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; margin-bottom: 12px;
     }
-    .claimed-check {
-      display: none;
-      padding: 12px;
-      border-radius: 10px;
-      background: var(--green-bg);
-      color: var(--green);
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-    }
-    .claimed-check.show { display: block; }
-
-    /* ── Footer ── */
+    .step-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .step-desc { color: var(--text-muted); font-size: 14px; }
     .footer {
-      margin-top: 80px;
-      padding: 40px 24px;
+      text-align: center; padding: 40px 24px;
       border-top: 1px solid var(--border);
-    }
-    .footer-inner {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-    .footer-links a {
-      font-size: 13px;
-      color: var(--text-muted);
-      transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--text); }
-    .footer-copy {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .search-bar { display: none; }
-      .hero-card { height: 200px; }
-      .hero-content h1 { font-size: 24px; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+      color: var(--text-muted); font-size: 13px;
     }
   </style>
 </head>
 <body>
-
-  <!-- Header -->
   <header class="header">
     <div class="header-inner">
-      <a href="/" class="logo">
-        <div class="logo-icon">TCC</div>
-        <span>TCC Store</span>
-      </a>
-      <div class="search-bar">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 14L11.1 11.1M12.6667 7.33333C12.6667 10.2789 10.2789 12.6667 7.33333 12.6667C4.38781 12.6667 2 10.2789 2 7.33333C2 4.38781 4.38781 2 7.33333 2C10.2789 2 12.6667 4.38781 12.6667 7.33333Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        <input type="text" id="searchInput" placeholder="Search cosmetics..." autocomplete="off">
-      </div>
+      <div class="logo">TCC Store</div>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/store">Cosmetics</a>
+        <a href="https://github.com/pnbx/TCC-Launcher">GitHub</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Categories -->
-  <nav class="categories" id="categories">
-    <button class="cat-btn active" data-cat="all">
-      <img src="images/capes.png" alt="All">
-      <span>All</span>
-    </button>
-    <button class="cat-btn" data-cat="cape">
-      <img src="images/capes.png" alt="Capes">
-      <span>Capes</span>
-    </button>
-    <button class="cat-btn" data-cat="wings">
-      <img src="images/wings.png" alt="Wings">
-      <span>Wings</span>
-    </button>
-    <button class="cat-btn" data-cat="backpack">
-      <img src="images/backpacks.png" alt="Backpacks">
-      <span>Backpacks</span>
-    </button>
-    <button class="cat-btn" data-cat="hat">
-      <img src="images/hats.png" alt="Hats">
-      <span>Hats</span>
-    </button>
-    <button class="cat-btn" data-cat="glove">
-      <img src="images/gloves.png" alt="Gloves">
-      <span>Gloves</span>
-    </button>
-    <button class="cat-btn" data-cat="shoulder">
-      <img src="images/shoulders.png" alt="Shoulders">
-      <span>Shoulders</span>
-    </button>
-    <button class="cat-btn" data-cat="aura">
-      <img src="images/auras.png" alt="Auras">
-      <span>Auras</span>
-    </button>
-  </nav>
-
-  <!-- Hero -->
   <section class="hero">
-    <div class="hero-card">
-      <img src="images/177.jpg" alt="TCC Store">
-      <div class="hero-content">
-        <span class="hero-badge">100% Free</span>
-        <h1>All Cosmetics Are Free</h1>
-        <p>Every cape, wing, glove, hat, and aura in the store is yours at no cost. Pick what you like.</p>
+    <div class="hero-badge">✓ 100% Free</div>
+    <h1>All Cosmetics Are Free</h1>
+    <p>Every hat, wing, cloak, and shield in TCC Client is yours at no cost. Customize your character in-game with the MoreCosmetics mod.</p>
+    <a href="https://modrinth.com/mod/morecosmeticsmod" class="hero-cta">
+      Learn More →
+    </a>
+  </section>
+
+  <div class="container">
+    <section class="section">
+      <h2 class="section-title">Available Cosmetic Categories</h2>
+      <p class="section-sub">Powered by MoreCosmetics — over 1000 designs built in</p>
+      <div class="categories">
+        <div class="category-card">
+          <div class="category-icon">👑</div>
+          <div class="category-name">Hats</div>
+          <div class="category-desc">Crowns, helmets, hoods, and more. Choose from hundreds of styles and customize colors.</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🪽</div>
+          <div class="category-name">Wings</div>
+          <div class="category-desc">Angel wings, demon wings, butterfly wings. Fully positionable and colorable.</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🛡️</div>
+          <div class="category-name">Shields</div>
+          <div class="category-desc">Back shields with custom textures. Upload your own or pick from the library.</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🧣</div>
+          <div class="category-name">Cloaks</div>
+          <div class="category-desc">Flowing capes and cloaks. Upload custom textures visible to all MoreCosmetics users.</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">✨</div>
+          <div class="category-name">Auras & Effects</div>
+          <div class="category-desc">Particle effects and auras around your character. Stand out on any server.</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🏷️</div>
+          <div class="category-name">Nametags</div>
+          <div class="category-desc">Custom nametag styles and fonts. Choose how your name appears to others.</div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Items Grid -->
-  <section class="section">
-    <div class="section-header">
-      <h2>All Cosmetics</h2>
-      <span class="count" id="itemCount"></span>
-    </div>
-    <div class="grid" id="itemGrid"></div>
-  </section>
-
-  <!-- Modal -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="modal">
-      <img class="modal-img" id="modalImg" src="" alt="">
-      <div class="modal-body">
-        <h2 id="modalName"></h2>
-        <p id="modalDesc"></p>
-        <div class="modal-variants" id="modalVariants"></div>
-        <button class="claim-btn" id="claimBtn">Claim for Free</button>
-        <div class="claimed-check" id="claimedCheck">✓ Claimed — check your launcher</div>
+    <div class="how-it-works">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">Launch TCC Client</div>
+          <div class="step-desc">Start the launcher and pick your version</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">Press M</div>
+          <div class="step-desc">Open the MoreCosmetics editor in-game</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Customize</div>
+          <div class="step-desc">Pick cosmetics, change colors, adjust positions</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-title">Play</div>
+          <div class="step-desc">Your cosmetics are visible to all MoreCosmetics users</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-copy">© 2026 TCC Client. All rights reserved.</div>
-      <div class="footer-links">
-        <a href="https://theazizi.space">Home</a>
-        <a href="https://github.com/pnbx/TCC-Launcher">GitHub</a>
-      </div>
-    </div>
+    <p>TCC Client — Free, open-source Minecraft launcher</p>
+    <p style="margin-top: 8px;">Cosmetics powered by <a href="https://modrinth.com/mod/morecosmeticsmod" style="color: var(--accent);">MoreCosmetics</a></p>
   </footer>
-
-  <script>
-    const ITEMS = [
-      { id: 1, name: "Light Wings", desc: "Wings of radiant light. Default, Blue, Purple.", type: "wings", img: "images/183.png", tags: ["angelic","gold","blue","purple"], variants: ["Default","Blue","Purple"] },
-      { id: 2, name: "Demon Wings", desc: "Leathery bat-like wings from the underworld.", type: "wings", img: "images/180.png", tags: ["evil","red"], variants: [] },
-      { id: 3, name: "Light Sword", desc: "A sword humming with light. Default, Blue, Purple.", type: "backpack", img: "images/169.png", tags: ["angelic","blue","gold","purple"], variants: ["Default","Blue","Purple"] },
-      { id: 4, name: "Heat Sword", desc: "A blade wreathed in searing heat.", type: "backpack", img: "images/167.png", tags: ["fire","orange"], variants: ["Default"] },
-      { id: 5, name: "Basic Sword", desc: "A dependable steel sword worn on the back.", type: "backpack", img: "images/165.png", tags: ["basic","gray"], variants: ["Default"] },
-      { id: 6, name: "Space Cape", desc: "A cape woven from the night sky and distant stars.", type: "cape", img: "images/103.png", tags: ["cosmic","black"], variants: [] },
-      { id: 7, name: "Light Crown", desc: "A crown of pure light. Default, Blue, Purple.", type: "hat", img: "images/139.png", tags: ["angelic","gold","blue","purple"], variants: ["Default","Blue","Purple"] },
-      { id: 8, name: "Bone Shoulder Armor", desc: "Skeletal pauldrons carved from bone.", type: "shoulder", img: "images/161.png", tags: ["bone","white","gray"], variants: ["Left","Right","Left Alt","Right Alt"] },
-      { id: 9, name: "Nature Glove", desc: "A glove entwined with living vines.", type: "glove", img: "images/157.png", tags: ["nature","green"], variants: ["Left","Right","Left Alt","Right Alt"] },
-      { id: 10, name: "Heat Gauntlet", desc: "A gauntlet forged in flame.", type: "glove", img: "images/153.png", tags: ["fire","orange"], variants: ["Left","Right","Left Alt","Right Alt"] },
-      { id: 11, name: "Basic Gauntlet", desc: "A basic armored gauntlet in steel or silver.", type: "glove", img: "images/145.png", tags: ["basic","gray","silver","gold"], variants: ["Gold Left","Gold Right","Silver Left","Silver Right","Alt Gold L","Alt Gold R","Alt Silver L","Alt Silver R"] },
-      { id: 12, name: "Heart Particles", desc: "A flutter of floating hearts trailing behind you.", type: "aura", img: "images/100.png", tags: ["particles","pink"], variants: [] },
-      { id: 13, name: "Smoke Particles", desc: "A hazy plume of drifting smoke.", type: "aura", img: "images/175.png", tags: ["particles","gray"], variants: [] },
-    ];
-
-    let activeCat = 'all';
-    let searchQuery = '';
-    let claimed = JSON.parse(localStorage.getItem('tcc-claimed') || '{}');
-
-    function render() {
-      const grid = document.getElementById('itemGrid');
-      const count = document.getElementById('itemCount');
-      let filtered = ITEMS;
-
-      if (activeCat !== 'all') {
-        filtered = filtered.filter(i => i.type === activeCat);
-      }
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(i =>
-          i.name.toLowerCase().includes(q) ||
-          i.desc.toLowerCase().includes(q) ||
-          i.tags.some(t => t.includes(q))
-        );
-      }
-
-      count.textContent = `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
-
-      grid.innerHTML = filtered.map(item => `
-        <div class="item" onclick="openModal(${item.id})">
-          <img class="item-img" src="${item.img}" alt="${item.name}" loading="lazy">
-          <div class="item-body">
-            <div class="item-name">${item.name}</div>
-            <div class="item-desc">${item.desc}</div>
-            <div class="item-meta">
-              <span class="item-type">${item.type}</span>
-              <span class="item-price price-free">Free</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function openModal(id) {
-      const item = ITEMS.find(i => i.id === id);
-      if (!item) return;
-
-      document.getElementById('modalImg').src = item.img;
-      document.getElementById('modalName').textContent = item.name;
-      document.getElementById('modalDesc').textContent = item.desc;
-
-      const variantsEl = document.getElementById('modalVariants');
-      if (item.variants.length > 0) {
-        variantsEl.innerHTML = item.variants.map((v, i) =>
-          `<button class="variant-btn ${i === 0 ? 'active' : ''}" onclick="selectVariant(this)">${v}</button>`
-        ).join('');
-        variantsEl.style.display = 'flex';
-      } else {
-        variantsEl.style.display = 'none';
-      }
-
-      const claimBtn = document.getElementById('claimBtn');
-      const claimedCheck = document.getElementById('claimedCheck');
-
-      if (claimed[id]) {
-        claimBtn.style.display = 'none';
-        claimedCheck.classList.add('show');
-      } else {
-        claimBtn.style.display = 'block';
-        claimedCheck.classList.remove('show');
-        claimBtn.onclick = () => {
-          claimed[id] = true;
-          localStorage.setItem('tcc-claimed', JSON.stringify(claimed));
-          claimBtn.style.display = 'none';
-          claimedCheck.classList.add('show');
-        };
-      }
-
-      document.getElementById('modalOverlay').classList.add('open');
-    }
-
-    function closeModal() {
-      document.getElementById('modalOverlay').classList.remove('open');
-    }
-
-    function selectVariant(btn) {
-      btn.parentElement.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
-    document.getElementById('modalOverlay').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) closeModal();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-    });
-
-    // Category buttons
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeCat = btn.dataset.cat;
-        render();
-      });
-    });
-
-    // Search
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      searchQuery = e.target.value;
-      render();
-    });
-
-    render();
-  </script>
 </body>
 </html>
