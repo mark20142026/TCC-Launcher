@@ -5,8 +5,8 @@
   "rewrites": [
     { "source": "/", "destination": "/api/landing" },
     { "source": "/images/(.*)", "destination": "/api/store-images?path=$1" },
-    { "source": "/store", "destination": "/api/landing" },
-    { "source": "/store/", "destination": "/api/landing" },
+    { "source": "/store", "destination": "/api/store" },
+    { "source": "/store/", "destination": "/api/store" },
     { "source": "/store/images/(.*)", "destination": "/api/store-images?path=$1" },
     { "source": "/oneclient/CHANGE_LOG.md", "destination": "/api/content" },
     { "source": "/oneclient/tos.json", "destination": "/api/content" },
