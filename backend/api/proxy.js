@@ -165,10 +165,19 @@ export default async function handler(req, res) {
     }
   }
 
-  // Default: proxy to upstream data host
+  // Build query string (excluding 'path' key used by rewrites)
   const query = new URLSearchParams(req.query);
   query.delete('path');
   const qs = query.toString();
+
+  // PolyPlus API proxy: route account/cosmetics/websocket to plus.polyfrost.org
+  const POLYPLUS_PREFIXES = ['/account/', '/cosmetics', '/websocket'];
+  if (POLYPLUS_PREFIXES.some(p => path.startsWith(p) || path === p.replace(/\/$/, ''))) {
+    const upstreamUrl = `https://plus.polyfrost.org${path}${qs ? `?${qs}` : ''}`;
+    return proxy(req, res, upstreamUrl);
+  }
+
+  // Default: proxy to upstream data host
   const upstreamUrl = `${UPSTREAM_DATA}/${path}${qs ? `?${qs}` : ''}`;
 
   return proxy(req, res, upstreamUrl);

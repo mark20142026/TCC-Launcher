@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TCC Store — Free Cosmetics</title>
+  <title>TCC Store — Cosmetics</title>
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,176 +28,178 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
       min-height: 100vh;
     }
-    a { color: inherit; text-decoration: none; }
-    .header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-    .header-inner {
-      max-width: var(--max-w); margin: 0 auto;
-      padding: 0 24px; height: 64px;
+
+    /* Nav */
+    .nav {
       display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+      max-width: var(--max-w); margin: 0 auto;
     }
-    .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
-    .nav-links { display: flex; gap: 24px; }
-    .nav-links a { color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color .2s; }
-    .nav-links a:hover { color: var(--text); }
+    .nav-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1.1rem; }
+    .nav-brand .icon { width: 28px; height: 28px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
+
+    /* Hero */
     .hero {
-      text-align: center; padding: 80px 24px 60px;
-      background: linear-gradient(180deg, rgba(108,92,231,0.08) 0%, transparent 100%);
+      text-align: center; padding: 4rem 2rem 3rem;
+      max-width: var(--max-w); margin: 0 auto;
     }
-    .hero-badge {
-      display: inline-block; padding: 6px 16px; border-radius: 20px;
-      background: var(--green-bg); color: var(--green);
-      font-size: 13px; font-weight: 600; margin-bottom: 16px;
+    .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+    /* Features */
+    .features {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem; padding: 0 2rem 3rem;
+      max-width: var(--max-w); margin: 0 auto;
     }
-    .hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 16px; line-height: 1.1; }
-    .hero p { font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto 32px; }
-    .hero-cta {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; border-radius: var(--radius);
-      background: var(--accent); color: white;
-      font-size: 16px; font-weight: 600; transition: all .2s;
-    }
-    .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--accent-glow); }
-    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
-    .section { padding: 60px 0; }
-    .section-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .section-sub { color: var(--text-muted); margin-bottom: 32px; }
-    .categories {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
-    .category-card {
+    .feature-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 24px;
-      transition: all .2s; cursor: default;
+      border-radius: var(--radius); padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
     }
-    .category-card:hover {
-      background: var(--surface-hover);
-      border-color: var(--accent);
-      transform: translateY(-4px);
-    }
-    .category-icon { font-size: 40px; margin-bottom: 12px; }
-    .category-name { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-    .category-desc { color: var(--text-muted); font-size: 14px; }
-    .how-it-works {
+    .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .feature-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .feature-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Steps */
+    .steps {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 40px;
-      margin: 40px 0;
+      border-radius: var(--radius); padding: 2.5rem;
+      max-width: 700px; margin: 0 auto 3rem;
     }
-    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 24px; }
-    .step { text-align: center; }
+    .steps h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center; }
+    .step { display: flex; gap: 1rem; margin-bottom: 1.25rem; }
+    .step:last-child { margin-bottom: 0; }
     .step-num {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--accent); color: white;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 700; margin-bottom: 12px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: #fff; font-weight: 700; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .step-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-    .step-desc { color: var(--text-muted); font-size: 14px; }
+    .step-text h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .step-text p { color: var(--text-muted); font-size: 0.85rem; }
+
+    /* CTA */
+    .cta {
+      text-align: center; padding: 3rem 2rem 4rem;
+      max-width: var(--max-w); margin: 0 auto;
+    }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent); color: #fff; border: none;
+      padding: 0.85rem 2rem; border-radius: 8px; font-size: 1rem;
+      font-weight: 600; text-decoration: none; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.9; }
+    .cta-sub { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem; }
+
+    /* Footer */
     .footer {
-      text-align: center; padding: 40px 24px;
+      text-align: center; padding: 2rem;
       border-top: 1px solid var(--border);
-      color: var(--text-muted); font-size: 13px;
+      color: var(--text-muted); font-size: 0.8rem;
     }
   </style>
 </head>
 <body>
-  <header class="header">
-    <div class="header-inner">
-      <div class="logo">TCC Store</div>
-      <nav class="nav-links">
-        <a href="/">Home</a>
-        <a href="/store">Cosmetics</a>
-        <a href="https://github.com/pnbx/TCC-Launcher">GitHub</a>
-      </nav>
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="icon">TCC</div>
+      <span>TCC Store</span>
     </div>
-  </header>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/store" class="active">Cosmetics</a>
+      <a href="/tcc/latest">Download</a>
+    </div>
+  </nav>
 
   <section class="hero">
-    <div class="hero-badge">✓ 100% Free</div>
-    <h1>All Cosmetics Are Free</h1>
-    <p>Every hat, wing, cloak, and shield in TCC Client is yours at no cost. Customize your character in-game with the MoreCosmetics mod.</p>
-    <a href="https://modrinth.com/mod/morecosmeticsmod" class="hero-cta">
-      Learn More →
-    </a>
+    <h1>In-Game <span>Cosmetics</span></h1>
+    <p>Customize your character with capes, wings, hats, and more — all through the built-in cosmetics system in TCC Client.</p>
   </section>
 
-  <div class="container">
-    <section class="section">
-      <h2 class="section-title">Available Cosmetic Categories</h2>
-      <p class="section-sub">Powered by MoreCosmetics — over 1000 designs built in</p>
-      <div class="categories">
-        <div class="category-card">
-          <div class="category-icon">👑</div>
-          <div class="category-name">Hats</div>
-          <div class="category-desc">Crowns, helmets, hoods, and more. Choose from hundreds of styles and customize colors.</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">🪽</div>
-          <div class="category-name">Wings</div>
-          <div class="category-desc">Angel wings, demon wings, butterfly wings. Fully positionable and colorable.</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">🛡️</div>
-          <div class="category-name">Shields</div>
-          <div class="category-desc">Back shields with custom textures. Upload your own or pick from the library.</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">🧣</div>
-          <div class="category-name">Cloaks</div>
-          <div class="category-desc">Flowing capes and cloaks. Upload custom textures visible to all MoreCosmetics users.</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">✨</div>
-          <div class="category-name">Auras & Effects</div>
-          <div class="category-desc">Particle effects and auras around your character. Stand out on any server.</div>
-        </div>
-        <div class="category-card">
-          <div class="category-icon">🏷️</div>
-          <div class="category-name">Nametags</div>
-          <div class="category-desc">Custom nametag styles and fonts. Choose how your name appears to others.</div>
-        </div>
-      </div>
-    </section>
+  <section class="features">
+    <div class="feature-card">
+      <div class="feature-icon">🧣</div>
+      <h3>Capes</h3>
+      <p>Choose from a variety of capes including animated designs. Equip them in-game and show them off on any server.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🪶</div>
+      <h3>Wings & Back Bling</h3>
+      <p>Add wings, shields, and back accessories to your character. Mix and match to create your unique look.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👑</div>
+      <h3>Hats & Headgear</h3>
+      <p>Hats, helmets, and other head cosmetics to stand out from the crowd.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✨</div>
+      <h3>Auras & Particles</h3>
+      <p>Surround yourself with particle effects and auras that follow you around.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>Fully Customizable</h3>
+      <p>Adjust colors, positions, and styles for many cosmetics. Create your own look with the in-game editor.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>Nametag Styles</h3>
+      <p>Customize how your nametag appears to other players with unique styles and colors.</p>
+    </div>
+  </section>
 
-    <div class="how-it-works">
-      <h2 class="section-title">How It Works</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-title">Launch TCC Client</div>
-          <div class="step-desc">Start the launcher and pick your version</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-title">Press M</div>
-          <div class="step-desc">Open the MoreCosmetics editor in-game</div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-title">Customize</div>
-          <div class="step-desc">Pick cosmetics, change colors, adjust positions</div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-title">Play</div>
-          <div class="step-desc">Your cosmetics are visible to all MoreCosmetics users</div>
-        </div>
+  <section class="steps">
+    <h2>How It Works</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <h4>Launch TCC Client</h4>
+        <p>Open the launcher and start Minecraft with the QoL bundle enabled.</p>
       </div>
     </div>
-  </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <h4>Open Cosmetics Menu</h4>
+        <p>In-game, access the cosmetics screen from the pause menu or use the keybind.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <h4>Browse & Equip</h4>
+        <p>Pick from available cosmetics, customize colors and positions, and equip them.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <h4>Play!</h4>
+        <p>Your cosmetics are visible to all TCC Client users on any server.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <a href="/tcc/latest" class="cta-btn">⬇ Download TCC Client</a>
+    <p class="cta-sub">Get started with cosmetics — download the latest version of TCC Client.</p>
+  </section>
 
   <footer class="footer">
-    <p>TCC Client — Free, open-source Minecraft launcher</p>
-    <p style="margin-top: 8px;">Cosmetics powered by <a href="https://modrinth.com/mod/morecosmeticsmod" style="color: var(--accent);">MoreCosmetics</a></p>
+    <p>© 2026 TCC. Built with passion for the Minecraft community.</p>
   </footer>
 </body>
 </html>

@@ -1,28 +1,28 @@
 {
-    "versions": {
-        "1.21.11": {
-            "fabric": [
-                {
-                    "path": "/oneclient/bundles/generated/hud-1.21.11-fabric.mrpack",
-                    "sha1": "f41f30b9febf7552790933b87f866b4811a61432"
-                },
-                {
-                    "path": "/oneclient/bundles/generated/performance-1.21.11-fabric.mrpack",
-                    "sha1": "e4078389e209173440bbe1a9bdda0589406b9ea6"
-                },
-                {
-                    "path": "/oneclient/bundles/generated/qol-1.21.11-fabric.mrpack",
-                    "sha1": "6c3f9ce0fd01044666628df4131bf06803f4c4ee"
-                },
-                {
-                    "path": "/oneclient/bundles/generated/utility-1.21.11-fabric.mrpack",
-                    "sha1": "e52711e6d10ab364326e790fff9ec4f883b4ff26"
-                },
-                {
-                    "path": "/oneclient/bundles/generated/skyblock-1.21.11-fabric.mrpack",
-                    "sha1": "09948162bf97475c4d8e34fb430728df0acc3314"
-                }
-            ]
+  "versions": {
+    "1.21.11": {
+      "fabric": [
+        {
+          "path": "/oneclient/bundles/generated/hud-1.21.11-fabric.mrpack",
+          "sha1": "acb5c8f7f660a51693064cfcc5be6756da986f0b"
+        },
+        {
+          "path": "/oneclient/bundles/generated/performance-1.21.11-fabric.mrpack",
+          "sha1": "55cc80adce754bfe696c825d426d526debfb04bf"
+        },
+        {
+          "path": "/oneclient/bundles/generated/qol-1.21.11-fabric.mrpack",
+          "sha1": "de03bb51294a1d6b082b46e11ba46dad550449ff"
+        },
+        {
+          "path": "/oneclient/bundles/generated/utility-1.21.11-fabric.mrpack",
+          "sha1": "c4b1411a36bc197ee1d2d96b2f4764d647378b8f"
+        },
+        {
+          "path": "/oneclient/bundles/generated/skyblock-1.21.11-fabric.mrpack",
+          "sha1": "8b949777e032b6de6e891ee67112d059973810bd"
         }
+      ]
     }
+  }
 }

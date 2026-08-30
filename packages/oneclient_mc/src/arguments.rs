@@ -57,6 +57,7 @@ pub fn java_arguments(
     parsed.extend(performance_flags(java_major, java_arch, mem_max, &custom));
 
     parsed.push(format!("-Xmx{mem_max}M"));
+    parsed.push(format!("-Dpolyplus.apiUrl={}", constants::metadata_api_url()));
     parsed.extend(custom);
 
     Ok(parsed)
