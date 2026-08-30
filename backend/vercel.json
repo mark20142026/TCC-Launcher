@@ -1,16 +1,25 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "trailingSlash": false,
+  "cleanUrls": true,
   "rewrites": [
+    { "source": "/", "destination": "/api/landing" },
+    { "source": "/store", "destination": "/api/store-page" },
+    { "source": "/store/", "destination": "/api/store-page" },
     { "source": "/oneclient/CHANGE_LOG.md", "destination": "/api/changelog" },
     { "source": "/oneclient/tos.json", "destination": "/api/tos" },
     { "source": "/oneclient/latest.json", "destination": "/api/latest" },
     { "source": "/health", "destination": "/api/health" },
     { "source": "/minecraft/v0/manifest.json", "destination": "/api/minecraft" },
+    { "source": "/minecraft/v1/manifest.json", "destination": "/api/proxy?path=/minecraft/v1/manifest.json" },
     { "source": "/forge/v0/manifest.json", "destination": "/api/forge" },
+    { "source": "/forge/v1/manifest.json", "destination": "/api/proxy?path=/forge/v1/manifest.json" },
     { "source": "/fabric/v0/manifest.json", "destination": "/api/fabric" },
+    { "source": "/fabric/v1/manifest.json", "destination": "/api/proxy?path=/fabric/v1/manifest.json" },
     { "source": "/neo/v0/manifest.json", "destination": "/api/neo" },
+    { "source": "/neo/v1/manifest.json", "destination": "/api/proxy?path=/neo/v1/manifest.json" },
     { "source": "/quilt/v0/manifest.json", "destination": "/api/quilt" },
+    { "source": "/quilt/v1/manifest.json", "destination": "/api/proxy?path=/quilt/v1/manifest.json" },
     { "source": "/(.*)", "destination": "/api/proxy?path=$1" }
   ],
   "headers": [
