@@ -117,7 +117,7 @@ impl Component for ToastController {
     fn render(&self) -> impl IntoElement {
         let dispatch = use_dispatch();
         let title = use_state(|| "Downloading assets".to_string());
-        let body = use_state(|| "PolyBlock by Polyfrost".to_string());
+        let body = use_state(|| "TCC Client".to_string());
         let mut progress = use_state(|| 0u64);
 
         let info = dispatch.clone();
@@ -497,7 +497,7 @@ const STATUS_PRESETS: [(&str, IconType, ServiceStatus); 4] = [
         ServiceStatus {
             online: false,
             mc_auth_up: false,
-            polyfrost_up: false,
+            service_up: false,
         },
     ),
     (
@@ -506,16 +506,16 @@ const STATUS_PRESETS: [(&str, IconType, ServiceStatus); 4] = [
         ServiceStatus {
             online: true,
             mc_auth_up: false,
-            polyfrost_up: true,
+            service_up: true,
         },
     ),
     (
-        "Polyfrost down",
+        "Backend services down",
         IconType::AlertCircle,
         ServiceStatus {
             online: true,
             mc_auth_up: true,
-            polyfrost_up: false,
+            service_up: false,
         },
     ),
     (
@@ -524,7 +524,7 @@ const STATUS_PRESETS: [(&str, IconType, ServiceStatus); 4] = [
         ServiceStatus {
             online: true,
             mc_auth_up: false,
-            polyfrost_up: false,
+            service_up: false,
         },
     ),
 ];

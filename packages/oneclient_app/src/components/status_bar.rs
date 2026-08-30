@@ -19,7 +19,7 @@ const BAR_LAYER: u8 = 14;
 enum Issue {
     NoInternet,
     McAuthDown,
-    PolyfrostDown,
+    ServiceDown,
 }
 
 impl Issue {
@@ -27,7 +27,7 @@ impl Issue {
         match self {
             Self::NoInternet => !s.online,
             Self::McAuthDown => s.online && !s.mc_auth_up,
-            Self::PolyfrostDown => s.online && !s.polyfrost_up,
+            Self::ServiceDown => s.online && !s.service_up,
         }
     }
 
@@ -37,7 +37,7 @@ impl Issue {
             Self::McAuthDown => {
                 "Minecraft authentication servers are unreachable. Logging in may fail."
             }
-            Self::PolyfrostDown => "Polyfrost services are experiencing issues.",
+            Self::ServiceDown => "Backend services are experiencing issues.",
         }
     }
 
@@ -45,14 +45,14 @@ impl Issue {
         match self {
             Self::NoInternet => IconType::Globe01,
             Self::McAuthDown => IconType::AlertTriangle,
-            Self::PolyfrostDown => IconType::AlertCircle,
+            Self::ServiceDown => IconType::AlertCircle,
         }
     }
 
     fn background(self) -> Color {
         match self {
             Self::NoInternet => colors::danger(),
-            Self::McAuthDown | Self::PolyfrostDown => AMBER,
+            Self::McAuthDown | Self::ServiceDown => AMBER,
         }
     }
 
@@ -62,7 +62,7 @@ impl Issue {
 }
 
 fn active_issues(s: &ServiceStatus) -> Vec<Issue> {
-    [Issue::NoInternet, Issue::McAuthDown, Issue::PolyfrostDown]
+    [Issue::NoInternet, Issue::McAuthDown, Issue::ServiceDown]
         .into_iter()
         .filter(|i| i.is_active(s))
         .collect()

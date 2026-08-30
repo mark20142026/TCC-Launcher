@@ -8,9 +8,9 @@ use crate::service::RequestClient;
 
 const CONNECTIVITY_URL: &str = "https://cp.cloudflare.com/generate_204";
 const MC_AUTH_URL: &str = "https://api.minecraftservices.com/";
-static POLYFROST_STATUS_URL: OnceLock<String> = OnceLock::new();
-fn polyfrost_status_url() -> &'static str {
-    POLYFROST_STATUS_URL.get_or_init(|| {
+static SERVICE_STATUS_URL: OnceLock<String> = OnceLock::new();
+fn service_status_url() -> &'static str {
+    SERVICE_STATUS_URL.get_or_init(|| {
         std::env::var_os("TCC_STATUS_URL")
             .and_then(|v| v.into_string().ok())
             .unwrap_or_else(|| "https://api.theazizi.space/status/index.json".to_string())
@@ -23,7 +23,7 @@ const PROBE_TIMEOUT: Duration = Duration::from_secs(8);
 pub struct ServiceStatus {
     pub online: bool,
     pub mc_auth_up: bool,
-    pub polyfrost_up: bool,
+    pub service_up: bool,
 }
 
 impl Default for ServiceStatus {
@@ -31,7 +31,7 @@ impl Default for ServiceStatus {
         Self {
             online: true,
             mc_auth_up: true,
-            polyfrost_up: true,
+            service_up: true,
         }
     }
 }
@@ -136,14 +136,14 @@ pub async fn check_service_status(requester: &RequestClient) -> ServiceStatus {
         return ServiceStatus {
             online: false,
             mc_auth_up: false,
-            polyfrost_up: false,
+            service_up: false,
         };
     }
 
     let mc_auth_up = reachable(client, MC_AUTH_URL).await;
 
-    let polyfrost_up = match client
-        .get(polyfrost_status_url())
+    let service_up = match client
+        .get(service_status_url())
         .timeout(PROBE_TIMEOUT)
         .send()
         .await
@@ -166,6 +166,6 @@ pub async fn check_service_status(requester: &RequestClient) -> ServiceStatus {
     ServiceStatus {
         online: true,
         mc_auth_up,
-        polyfrost_up,
+        service_up,
     }
 }

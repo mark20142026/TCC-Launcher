@@ -84,7 +84,6 @@ fn anim_chip(name: &'static str, active: bool) -> impl IntoElement {
                 .font_size(12.)
                 .color(colors::fg_primary()),
         )
-        .into_element()
 }
 
 fn side_panel() -> impl IntoElement {
@@ -96,7 +95,7 @@ fn side_panel() -> impl IntoElement {
         .spacing(20.)
         .child(
             label()
-                .text("Skins")
+                .text("Skins & Cosmetics")
                 .font_size(32.)
                 .font_weight(FontWeight::BOLD)
                 .color(colors::fg_primary()),
@@ -108,6 +107,22 @@ fn side_panel() -> impl IntoElement {
                 .child(action_button("Import Skin", IconType::Plus, true))
                 .child(action_button("Download", IconType::Download01, false))
                 .child(action_button("Remove", IconType::Trash01, false)),
+        )
+        .child(
+            label()
+                .text("Browse free capes, wings, auras, and more in the TCC Store.")
+                .font_size(13.)
+                .color(colors::fg_secondary()),
+        )
+        .child(
+            Button::new()
+                .variant(ButtonVariant::Primary)
+                .child(Icon::new(IconType::LinkExternal01).size(16.).color(colors::fg_primary()))
+                .text("Open TCC Store")
+                .on_press(|_| {
+                    crate::platform::open_url("https://store.theazizi.space");
+                })
+                .into_element(),
         )
         .child(section_label("SKIN HISTORY"))
         .child(skin_grid(8))

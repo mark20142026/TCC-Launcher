@@ -12,6 +12,7 @@
     { "source": "/oneclient/tos.json", "destination": "/api/content" },
     { "source": "/oneclient/latest.json", "destination": "/api/latest" },
     { "source": "/health", "destination": "/api/health" },
+    { "source": "/status/index.json", "destination": "/api/health" },
     { "source": "/minecraft/v0/manifest.json", "destination": "/api/minecraft" },
     { "source": "/minecraft/v1/manifest.json", "destination": "/api/proxy?path=/minecraft/v1/manifest.json" },
     { "source": "/forge/v0/manifest.json", "destination": "/api/forge" },
