@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     const platforms = {};
     for (const row of rows.filter((r) => r.pub_date === newest)) {
       platforms[row.platform] = {
-        signature: row.signature || undefined,
+        signature: row.signature || '',
         url: row.url,
       };
     }
