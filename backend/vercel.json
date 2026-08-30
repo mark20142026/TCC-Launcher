@@ -4,6 +4,8 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/", "destination": "/api/landing" },
+    { "source": "/tcc/latest", "destination": "/api/landing" },
+    { "source": "/tcc/latest/", "destination": "/api/landing" },
     { "source": "/images/(.*)", "destination": "/api/store-images?path=$1" },
     { "source": "/store", "destination": "/api/store" },
     { "source": "/store/", "destination": "/api/store" },
