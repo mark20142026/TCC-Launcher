@@ -25,6 +25,10 @@
     { "source": "/neo/v1/manifest.json", "destination": "/api/proxy?path=/neo/v1/manifest.json" },
     { "source": "/quilt/v0/manifest.json", "destination": "/api/quilt" },
     { "source": "/quilt/v1/manifest.json", "destination": "/api/proxy?path=/quilt/v1/manifest.json" },
+    { "source": "/account/(.*)", "destination": "/api/proxy?path=/account/$1" },
+    { "source": "/cosmetics", "destination": "/api/proxy?path=/cosmetics" },
+    { "source": "/cosmetics/(.*)", "destination": "/api/proxy?path=/cosmetics/$1" },
+    { "source": "/websocket", "destination": "/api/proxy?path=/websocket" },
     { "source": "/(.*)", "destination": "/api/proxy?path=$1" }
   ],
   "headers": [
