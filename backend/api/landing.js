@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const INSTALLER_URL = 'https://github.com/pnbx/TCC-Launcher/releases/download/v2.3.1/oneclient_app_2.3.1_x64-setup.exe';
+const INSTALLER_URL = 'https://github.com/pnbx/TCC-Launcher/releases/download/v2.3.2/oneclient_app_2.3.2_x64-setup.exe';
 
 module.exports = async (req, res) => {
   try {
