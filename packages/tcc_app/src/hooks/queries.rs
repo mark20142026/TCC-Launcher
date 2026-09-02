@@ -109,15 +109,15 @@ pub fn try_account(query: &UseQuery<AccountQuery>) -> Option<MinecraftAccount> {
 }
 
 async fn invalidate_auth_queries(account_id: Option<Uuid>) {
-    QueriesStorage::<ListAccountsQuery>::try_invalidate_matching(ListAccountsKeys).await;
+    QueriesStorage::<ListAccountsQuery>::invalidate_matching(ListAccountsKeys).await;
     for fallback in [false, true] {
-        QueriesStorage::<DefaultAccountQuery>::try_invalidate_matching(DefaultAccountKeys {
+        QueriesStorage::<DefaultAccountQuery>::invalidate_matching(DefaultAccountKeys {
             fallback,
         })
         .await;
     }
     if let Some(id) = account_id {
-        QueriesStorage::<AccountQuery>::try_invalidate_matching(AccountKeys { id }).await;
+        QueriesStorage::<AccountQuery>::invalidate_matching(AccountKeys { id }).await;
     }
 }
 

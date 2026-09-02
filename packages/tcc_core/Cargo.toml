@@ -26,6 +26,7 @@ tcc_polyplus.workspace = true
 polyio.workspace = true
 
 async-trait.workspace = true
+anyhow.workspace = true
 chrono.workspace = true
 directories.workspace = true
 futures-util.workspace = true

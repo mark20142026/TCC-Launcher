@@ -23,7 +23,7 @@ pub mod view;
 
 /// Runs the launcher: initializes the core, kicks off the auto-update check,
 /// then enters the UI event loop.
-pub fn run(devtools: bool) {
+pub fn run(_devtools: bool) {
     {
         match tokio::runtime::Runtime::new() {
             Ok(rt) => {
@@ -37,12 +37,11 @@ pub fn run(devtools: bool) {
 
     std::thread::spawn(crate::updater::auto_check_background);
 
-    let config = LaunchConfig::default()
+    let window = WindowConfig::new(app)
         .with_title("TCC Launcher")
-        .with_size((1200.0, 800.0))
-        .with_devtools(devtools);
-
-    launch_with_props(app, config, ()).unwrap();
+        .with_size(1200.0, 800.0);
+    let config = LaunchConfig::new().with_window(window);
+    launch(config);
 }
 
 fn app() -> Element {
