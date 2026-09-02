@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TCC Client — Minecraft Launcher</title>
+  <meta name="description" content="A fast, modded Minecraft launcher with pre-configured bundles, free cosmetics, and offline login support.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #06060c;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.07);
+      --text: #eeeef2;
+      --text-dim: #7a7a90;
+      --accent: #6c5ce7;
+      --accent-light: #8b7cf0;
+      --green: #00d26a;
+      --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(6,6,12,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .container {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo span {
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-dim);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding-top: 60px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(108,92,231,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+    }
+    .hero-tag .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover { opacity: 0.92; }
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.06); }
+    .hero-version {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* ── Features ── */
+    .features {
+      padding: 120px 0;
+    }
+    .features-label {
+      text-align: center;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent-light);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .features h2 {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 64px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .feature {
+      padding: 32px 28px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .feature:hover { border-color: rgba(255,255,255,0.12); }
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .fi-purple { background: rgba(108,92,231,0.15); }
+    .fi-green { background: rgba(0,210,106,0.12); }
+    .fi-orange { background: rgba(255,149,0,0.12); }
+    .fi-blue { background: rgba(56,152,236,0.12); }
+    .fi-pink { background: rgba(255,71,87,0.12); }
+    .fi-cyan { background: rgba(0,210,210,0.12); }
+    .feature h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .feature p {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── Modloaders ── */
+    .modloaders {
+      padding: 120px 0;
+      text-align: center;
+    }
+    .modloaders h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .modloaders > p {
+      font-size: 16px;
+      color: var(--text-dim);
+      max-width: 480px;
+      margin: 0 auto 48px;
+    }
+    .loader-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .loader-card {
+      padding: 28px 16px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .loader-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .loader-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .loader-card p {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ── CTA ── */
+    .cta {
+      padding: 120px 0;
+      text-align: center;
+    }
+    .cta-card {
+      padding: 80px 40px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(108,92,231,0.1) 0%, rgba(108,92,231,0.03) 100%);
+      border: 1px solid rgba(108,92,231,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(108,92,231,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-card h2 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .cta-card p {
+      font-size: 16px;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+      position: relative;
+    }
+    .cta-card .btn { position: relative; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+    }
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    footer p {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-dim);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .loader-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { gap: 16px; }
+      .nav-links a:not(:last-child) { display: none; }
+      .hero h1 { letter-spacing: -1px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <span>TCC</span> Client
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="/store">Cosmetics</a>
+        <a href="https://github.com/pnbx/TCC-Launcher">GitHub</a>
+        <a href="https://github.com/pnbx/TCC-Launcher/releases/latest" class="btn btn-primary" style="padding: 8px 18px; font-size: 13px;">Download</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="dot"></span>
+        v2.2.3 — Windows
+      </div>
+      <h1>Play Minecraft<br><em>Your Way</em></h1>
+      <p>A launcher with pre-configured mod bundles, free cosmetics, and offline login. Pick your version, pick your mods, launch.</p>
+      <div class="hero-buttons">
+        <a href="https://github.com/pnbx/TCC-Launcher/releases/latest" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download for Windows
+        </a>
+        <a href="https://github.com/pnbx/TCC-Launcher" class="btn btn-ghost">
+          View Source
+        </a>
+      </div>
+      <p class="hero-version">Free · Open Source · No ads</p>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <p class="features-label">Why TCC</p>
+      <h2>Built for players, not ads</h2>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon fi-purple">📦</div>
+          <h3>Mod Bundles</h3>
+          <p>Pre-configured packs for performance, PvP, SkyBlock, and QoL. One click to install — no manual mod hunting.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon fi-green">🎨</div>
+          <h3>Free Cosmetics</h3>
+          <p>Capes, wings, gloves, auras, and more. All free. Browse the store and claim what you like.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon fi-orange">⚡</div>
+          <h3>Fast Updates</h3>
+          <p>Auto-update built in. New version drops? Get a prompt, click install, restart. No manual downloads.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon fi-blue">🔌</div>
+          <h3>Mod Loader Support</h3>
+          <p>Fabric, Forge, NeoForge, and Quilt. Switch between loaders per version — the launcher handles it.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon fi-pink">👤</div>
+          <h3>Offline Login</h3>
+          <p>No Microsoft account needed to get started. Pick a username, launch. Online features work with your account.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon fi-cyan">🔒</div>
+          <h3>Open Source</h3>
+          <p>Full source code on GitHub. Audit it, fork it, contribute. No telemetry, no tracking, no nonsense.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div>
+          <div class="stat-num">5</div>
+          <div class="stat-label">MC Versions</div>
+        </div>
+        <div>
+          <div class="stat-num">4</div>
+          <div class="stat-label">Mod Loaders</div>
+        </div>
+        <div>
+          <div class="stat-num">5</div>
+          <div class="stat-label">Mod Bundles</div>
+        </div>
+        <div>
+          <div class="stat-num">13+</div>
+          <div class="stat-label">Free Cosmetics</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modloaders -->
+  <section class="modloaders">
+    <div class="container">
+      <h2>All the loaders</h2>
+      <p>Pick the mod loader that fits your mods. The launcher manages Fabric, Forge, NeoForge, and Quilt per version.</p>
+      <div class="loader-grid">
+        <div class="loader-card">
+          <h3>Fabric</h3>
+          <p>Lightweight, fast updates</p>
+        </div>
+        <div class="loader-card">
+          <h3>Forge</h3>
+          <p>Largest mod ecosystem</p>
+        </div>
+        <div class="loader-card">
+          <h3>NeoForge</h3>
+          <p>Modern fork of Forge</p>
+        </div>
+        <div class="loader-card">
+          <h3>Quilt</h3>
+          <p>Community-driven fork</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-card">
+        <h2>Ready to play?</h2>
+        <p>Download TCC Client, pick a version, and launch. It's that simple.</p>
+        <a href="https://github.com/pnbx/TCC-Launcher/releases/latest" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download v2.2.3
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 TCC Client</p>
+      <div class="footer-links">
+        <a href="https://theazizi.space">Home</a>
+        <a href="/store">Cosmetics</a>
+        <a href="https://github.com/pnbx/TCC-Launcher">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

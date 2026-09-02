@@ -1,0 +1,28 @@
+{
+  "versions": {
+    "1.21.11": {
+      "fabric": [
+        {
+          "path": "/oneclient/bundles/generated/hud-1.21.11-fabric.mrpack",
+          "sha1": "acb5c8f7f660a51693064cfcc5be6756da986f0b"
+        },
+        {
+          "path": "/oneclient/bundles/generated/performance-1.21.11-fabric.mrpack",
+          "sha1": "55cc80adce754bfe696c825d426d526debfb04bf"
+        },
+        {
+          "path": "/oneclient/bundles/generated/qol-1.21.11-fabric.mrpack",
+          "sha1": "de03bb51294a1d6b082b46e11ba46dad550449ff"
+        },
+        {
+          "path": "/oneclient/bundles/generated/utility-1.21.11-fabric.mrpack",
+          "sha1": "c4b1411a36bc197ee1d2d96b2f4764d647378b8f"
+        },
+        {
+          "path": "/oneclient/bundles/generated/skyblock-1.21.11-fabric.mrpack",
+          "sha1": "8b949777e032b6de6e891ee67112d059973810bd"
+        }
+      ]
+    }
+  }
+}

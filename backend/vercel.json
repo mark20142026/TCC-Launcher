@@ -1,0 +1,42 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/api/landing" },
+    { "source": "/tcc/latest", "destination": "/api/landing" },
+    { "source": "/tcc/latest/", "destination": "/api/landing" },
+    { "source": "/images/(.*)", "destination": "/api/store-images?path=$1" },
+    { "source": "/store", "destination": "/api/store" },
+    { "source": "/store/", "destination": "/api/store" },
+    { "source": "/store/images/(.*)", "destination": "/api/store-images?path=$1" },
+    { "source": "/oneclient/CHANGE_LOG.md", "destination": "/api/content" },
+    { "source": "/oneclient/tos.json", "destination": "/api/content" },
+    { "source": "/oneclient/latest.json", "destination": "/api/latest" },
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/status/index.json", "destination": "/api/health" },
+    { "source": "/minecraft/v0/manifest.json", "destination": "/api/minecraft" },
+    { "source": "/minecraft/v1/manifest.json", "destination": "/api/proxy?path=/minecraft/v1/manifest.json" },
+    { "source": "/forge/v0/manifest.json", "destination": "/api/forge" },
+    { "source": "/forge/v1/manifest.json", "destination": "/api/proxy?path=/forge/v1/manifest.json" },
+    { "source": "/fabric/v0/manifest.json", "destination": "/api/fabric" },
+    { "source": "/fabric/v1/manifest.json", "destination": "/api/proxy?path=/fabric/v1/manifest.json" },
+    { "source": "/neo/v0/manifest.json", "destination": "/api/neo" },
+    { "source": "/neo/v1/manifest.json", "destination": "/api/proxy?path=/neo/v1/manifest.json" },
+    { "source": "/quilt/v0/manifest.json", "destination": "/api/quilt" },
+    { "source": "/quilt/v1/manifest.json", "destination": "/api/proxy?path=/quilt/v1/manifest.json" },
+    { "source": "/account/(.*)", "destination": "/api/proxy?path=/account/$1" },
+    { "source": "/cosmetics", "destination": "/api/proxy?path=/cosmetics" },
+    { "source": "/cosmetics/(.*)", "destination": "/api/proxy?path=/cosmetics/$1" },
+    { "source": "/websocket", "destination": "/api/proxy?path=/websocket" },
+    { "source": "/(.*)", "destination": "/api/proxy?path=$1" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}

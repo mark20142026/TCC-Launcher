@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Download TCC Client</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="https://api.theazizi.space/favicon-32x32.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0f;
+      color: #e8e8ed;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      text-align: center;
+      padding: 60px 40px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      max-width: 480px;
+      width: 90%;
+    }
+    .logo { font-size: 32px; font-weight: 800; color: #6c5ce7; margin-bottom: 8px; }
+    .version { color: #8888a0; font-size: 14px; margin-bottom: 32px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: #6c5ce7;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108,92,231,0.4);
+    }
+    .btn svg { width: 20px; height: 20px; }
+    .info { margin-top: 24px; color: #8888a0; font-size: 13px; }
+    .links { margin-top: 20px; display: flex; gap: 16px; justify-content: center; }
+    .links a { color: #6c5ce7; font-size: 13px; text-decoration: none; }
+    .links a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">TCC Client</div>
+    <div class="version">v2.3.1 · Windows 64-bit</div>
+    <a href="/tcc/latest" class="btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Download for Windows
+    </a>
+    <div class="info">Free · Open Source · No ads</div>
+    <div class="links">
+      <a href="https://theazizi.space">Home</a>
+      <a href="https://store.theazizi.space">Cosmetics</a>
+      <a href="https://github.com/pnbx/TCC-Launcher">GitHub</a>
+    </div>
+  </div>
+</body>
+</html>
