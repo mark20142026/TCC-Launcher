@@ -1,7 +1,6 @@
 //! View module
 
 pub mod app;
-pub mod mod;
 pub mod not_found;
 pub mod onboarding;
 pub mod startup;
