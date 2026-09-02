@@ -52,10 +52,17 @@ pub async fn check_for_updates() -> anyhow::Result<Option<UpdateInfo>> {
         return Ok(None);
     }
 
+    // Accept both key styles: our GitHub manifest uses polyio's short form
+    // ("windows-x64") while the backend `releases` table stores the long
+    // form ("windows-x86_64").
     let key = platform_key();
     let platform = manifest
         .get("platforms")
-        .and_then(|p| p.get(&key))
+        .and_then(|p| {
+            p.get(&key).or_else(|| {
+                p.get(&key.replace("-x64", "-x86_64"))
+            })
+        })
         .ok_or_else(|| anyhow::anyhow!("no update published for platform `{key}`"))?;
 
     let url = platform
