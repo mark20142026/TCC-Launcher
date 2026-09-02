@@ -23,7 +23,7 @@ pub struct Button {
     variant: ButtonVariant,
     size: ButtonSize,
     enabled: bool,
-    on_press: Option<EventHandler<PressEventData>>,
+    on_press: Option<EventHandler<Event<PressEventData>>>,
     children: Vec<Element>,
     text: Option<String>,
 }
@@ -124,9 +124,14 @@ impl Component for Button {
                     .fill(border_color)
                     .width(1.)
                     .alignment(BorderAlignment::Inner),
-            )
-            .on_press(self.on_press.clone().unwrap_or_default())
-            .cursor(if self.enabled { CursorIcon::Pointer } else { CursorIcon::Default });
+            );
+
+        if let Some(handler) = &self.on_press {
+            let handler = handler.clone();
+            btn = btn.on_press(move |e| handler.call(e));
+        }
+
+        btn = btn.cursor(if self.enabled { CursorIcon::Pointer } else { CursorIcon::Default });
 
         // Add children
         for child in &self.children {

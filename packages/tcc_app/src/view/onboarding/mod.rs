@@ -23,6 +23,7 @@ pub use welcome::OnboardingWelcome;
 
 use freya::prelude::*;
 use crate::components::{Button, Icon, IconType};
+use crate::routes::Route;
 use crate::theme::colors;
 
 pub fn step_heading(title: &str, description: &str) -> impl IntoElement {
@@ -31,14 +32,14 @@ pub fn step_heading(title: &str, description: &str) -> impl IntoElement {
         .spacing(8.)
         .child(
             label()
-                .text(title)
+                .text(title.to_string())
                 .font_size(28.)
                 .font_weight(FontWeight::BOLD)
                 .color(colors::fg_primary()),
         )
         .child(
             label()
-                .text(description)
+                .text(description.to_string())
                 .font_size(16.)
                 .color(colors::fg_secondary()),
         )

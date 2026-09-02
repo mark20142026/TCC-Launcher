@@ -171,13 +171,9 @@ impl Component for AccountRow {
             })
             .on_pointer_enter(move |_| {
                 hovered.set(true);
-                if !active {
-                    Cursor::set(CursorIcon::Pointer);
-                }
             })
             .on_pointer_leave(move |_| {
                 hovered.set(false);
-                Cursor::set(CursorIcon::default());
             })
             .on_press(switch)
             .child(
@@ -224,7 +220,7 @@ impl Component for Footer {
         let dispatch = use_dispatch();
         let open_accounts = move |_| {
             dispatch.close_account_switcher();
-            let _ = crate::routes::RouterContext::get().push(crate::routes::Route::Accounts {});
+            let _ = freya::router::RouterContext::get().push(crate::routes::Route::Accounts {});
         };
 
         Button::new()

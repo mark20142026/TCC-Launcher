@@ -20,7 +20,7 @@ impl LauncherCore {
 }
 
 /// Error type shared by launcher-level hooks and queries.
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, Clone, thiserror::Error)]
 pub enum LauncherError {
     #[error("the launcher is not initialized yet")]
     NotInitialized,

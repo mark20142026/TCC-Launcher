@@ -31,7 +31,7 @@ pub fn page_elevated() -> Color {
 }
 
 pub fn ghost_overlay_hover() -> Color {
-    Color::from_rgba(255, 255, 255, 20)
+    Color::from_argb(20, 255, 255, 255)
 }
 
 pub fn success() -> Color {

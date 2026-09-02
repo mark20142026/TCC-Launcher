@@ -5,7 +5,7 @@ use freya::prelude::*;
 #[derive(PartialEq)]
 pub struct OverlayPopup {
     position: Option<Position>,
-    on_close: Option<EventHandler<()>>,
+    on_close: Option<Box<dyn Fn()>>,
     child: Element,
 }
 
@@ -14,7 +14,7 @@ impl OverlayPopup {
         Self {
             position: None,
             on_close: None,
-            child: rsx! {},
+            child: rect().into_element(),
         }
     }
 
@@ -23,8 +23,8 @@ impl OverlayPopup {
         self
     }
 
-    pub fn on_close(mut self, handler: impl Fn(()) + 'static) -> Self {
-        self.on_close = Some(EventHandler::new(handler));
+    pub fn on_close(mut self, handler: impl Fn() + 'static) -> Self {
+        self.on_close = Some(Box::new(handler));
         self
     }
 
@@ -43,17 +43,21 @@ impl Default for OverlayPopup {
 impl Component for OverlayPopup {
     fn render(&self) -> impl IntoElement {
         let on_close = self.on_close.clone();
-        
-        rect()
+
+        let mut overlay = rect()
             .width(Size::fill())
             .height(Size::fill())
-            .position(self.position.unwrap_or(Position::Center))
             .background(Color::from_argb(128, 0, 0, 0))
             .on_press(move |_| {
                 if let Some(handler) = &on_close {
-                    handler(());
+                    handler();
                 }
-            })
-            .child(self.child.clone())
+            });
+
+        if let Some(position) = self.position.clone() {
+            overlay = overlay.position(position);
+        }
+
+        overlay.child(self.child.clone())
     }
 }

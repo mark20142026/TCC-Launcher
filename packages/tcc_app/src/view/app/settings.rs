@@ -127,14 +127,14 @@ fn settings_page(title: &str, description: &str) -> impl IntoElement {
         .padding(Gaps::new_all(24.))
         .child(
             label()
-                .text(title)
+                .text(title.to_string())
                 .font_size(24.)
                 .font_weight(FontWeight::BOLD)
                 .color(colors::fg_primary()),
         )
         .child(
             label()
-                .text(description)
+                .text(description.to_string())
                 .font_size(16.)
                 .color(colors::fg_secondary()),
         )

@@ -121,10 +121,12 @@ impl Component for Icon {
             IconType::Info => include_str!("../assets/icons/info.svg"),
         };
 
-        svg()
+        rect()
             .width(Size::px(self.size))
             .height(Size::px(self.size))
-            .color(self.color)
+            .child(
+                SvgViewer::new(svg).color(self.color),
+            )
             .into_element()
     }
 }

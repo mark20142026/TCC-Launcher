@@ -7,6 +7,11 @@ use crate::routes::Route;
 pub struct Actions;
 
 impl Actions {
+    /// Kept for call-site compatibility; `Actions` is a unit struct.
+    pub fn new() -> Self {
+        Self
+    }
+
     /// Pushes a route. Must be called from inside the router tree.
     pub fn navigate(&self, route: Route) {
         let _ = freya::router::RouterContext::get().push(route);

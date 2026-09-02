@@ -4,7 +4,10 @@ use freya::prelude::*;
 use tcc_auth::MinecraftAccount;
 
 use crate::components::{Avatar, Button, Icon, IconType};
-use crate::hooks::{try_default_account, use_current_account, use_add_offline_account};
+use crate::hooks::{
+    mutation_error, mutation_is_pending, try_default_account, use_add_offline_account,
+    use_current_account,
+};
 use crate::routes::Route;
 use crate::theme::colors;
 use crate::view::onboarding::{
@@ -34,9 +37,13 @@ impl Component for OnboardingAccount {
                 Some(account) => account_preview(account).into_element(),
                 None => {
                     let add = add_offline.clone();
-                    sign_in_card(add.pending, add.error.clone(), move |_| {
-                        // This will be handled by a dialog
-                    })
+                    sign_in_card(
+                        mutation_is_pending(&add),
+                        mutation_error(&add).map(|e| e.to_string()),
+                        move |_| {
+                            // This will be handled by a dialog
+                        },
+                    )
                     .into_element()
                 }
             })
@@ -99,7 +106,7 @@ fn account_preview(account: &MinecraftAccount) -> impl IntoElement {
 fn sign_in_card(
     pending: bool,
     error: Option<String>,
-    on_add: impl FnMut(Event<PressEventData>) + 'static,
+    on_add: impl Fn(Event<PressEventData>) + 'static,
 ) -> impl IntoElement {
     rect()
         .vertical()

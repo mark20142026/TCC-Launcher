@@ -1,7 +1,8 @@
 //! App shell layout
 
 use freya::prelude::*;
-use crate::components::{AccountSwitcher, Button, Icon, IconType};
+use freya::router::prelude::Outlet;
+use crate::components::AccountSwitcher;
 
 #[derive(PartialEq)]
 pub struct AppShell;
@@ -11,9 +12,7 @@ impl Component for AppShell {
         rect()
             .width(Size::fill())
             .height(Size::fill())
-            .child(
-                freya::router::Outlet::<crate::routes::Route> {}
-            )
+            .child(Outlet::<crate::routes::Route>::new())
             .child(AccountSwitcher)
     }
 }

@@ -42,8 +42,7 @@ impl Component for Avatar {
                     .text(&self.account_id[..2].to_uppercase())
                     .font_size(14.)
                     .font_weight(FontWeight::BOLD)
-                    .color(colors::fg_on_brand())
-                    .position(Position::Center),
+                    .color(colors::fg_on_brand()),
             )
     }
 }
