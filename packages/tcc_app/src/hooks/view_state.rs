@@ -13,9 +13,11 @@ pub fn use_view_state() -> PersistedView {
     }
 }
 
-pub fn settled_or_loading<Q: freya::query::QueryCapability>(
-    query: &UseQuery<Q>,
-) -> Option<Q::Ok> {
+pub fn settled_or_loading<Q>(query: &UseQuery<Q>) -> Option<Q::Ok>
+where
+    Q: freya::query::QueryCapability,
+    Q::Ok: Clone,
+{
     match &*query.read().state() {
         QueryStateData::Settled { res: Ok(data), .. } => Some(data.clone()),
         QueryStateData::Loading { res: Some(Ok(data)), .. } => Some(data.clone()),

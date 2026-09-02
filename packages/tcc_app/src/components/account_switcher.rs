@@ -27,7 +27,7 @@ impl Component for AccountSwitcher {
 
         OverlayPopup::new()
             .position(Position::new_global().top(72.).right(40.))
-            .on_close(move |()| dispatch.close_account_switcher())
+            .on_close(move || dispatch.close_account_switcher())
             .child(AccountPanel)
             .into_element()
     }

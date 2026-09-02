@@ -50,7 +50,5 @@ fn app() -> Element {
     let actions = crate::hooks::Actions::new();
     use_provide_actions(&actions);
 
-    rsx! {
-        freya::router::Router { crate::router() }
-    }
+    crate::router().into_element()
 }

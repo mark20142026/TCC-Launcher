@@ -2,10 +2,9 @@
 
 use freya::prelude::*;
 
-#[derive(PartialEq)]
 pub struct OverlayPopup {
     position: Option<Position>,
-    on_close: Option<Box<dyn Fn()>>,
+    on_close: Option<std::rc::Rc<dyn Fn()>>,
     child: Element,
 }
 
@@ -24,7 +23,7 @@ impl OverlayPopup {
     }
 
     pub fn on_close(mut self, handler: impl Fn() + 'static) -> Self {
-        self.on_close = Some(Box::new(handler));
+        self.on_close = Some(std::rc::Rc::new(handler));
         self
     }
 
@@ -37,6 +36,12 @@ impl OverlayPopup {
 impl Default for OverlayPopup {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl PartialEq for OverlayPopup {
+    fn eq(&self, other: &Self) -> bool {
+        self.position == other.position
     }
 }
 

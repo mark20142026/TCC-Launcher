@@ -1,7 +1,7 @@
 //! App shell layout
 
 use freya::prelude::*;
-use freya::router::prelude::Outlet;
+use freya::router::Outlet;
 use crate::components::AccountSwitcher;
 
 #[derive(PartialEq)]

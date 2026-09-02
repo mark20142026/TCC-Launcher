@@ -80,23 +80,27 @@ pub fn onboarding_nav(
 ) -> impl IntoElement {
     use crate::hooks::use_dispatch;
     use freya::router::RouterContext;
-    
+
     let dispatch = use_dispatch();
-    
+
+    let back_button = back.map(|route| {
+        Button::new()
+            .ghost()
+            .on_press(move |_| {
+                let _ = RouterContext::get().push(route);
+            })
+            .child(Icon::new(IconType::ChevronLeft).size(16.))
+            .text("Back")
+    });
+
     rect()
         .horizontal()
         .width(Size::fill())
         .main_align(Alignment::SpaceBetween)
         .child(
-            back.map(|route| {
-                Button::new()
-                    .ghost()
-                    .on_press(move |_| {
-                        let _ = RouterContext::get().push(route);
-                    })
-                    .child(Icon::new(IconType::ChevronLeft).size(16.))
-                    .text("Back")
-            })
+            back_button
+                .map(|button| button.into_element())
+                .unwrap_or_else(|| rect().into_element()),
         )
         .child(
             Button::new()
@@ -106,6 +110,6 @@ pub fn onboarding_nav(
                     let _ = RouterContext::get().push(next);
                 })
                 .text("Continue")
-                .child(Icon::new(IconType::ChevronRight).size(16.))
+                .child(Icon::new(IconType::ChevronRight).size(16.)),
         )
 }

@@ -11,7 +11,7 @@ use super::{Icon, IconType};
 pub struct Dropdown<T> {
     items: Vec<(String, T)>,
     selected: Option<T>,
-    on_select: Option<Box<dyn Fn(T)>>,
+    on_select: Option<std::rc::Rc<dyn Fn(T)>>,
     placeholder: String,
 }
 
@@ -31,7 +31,7 @@ impl<T> Dropdown<T> {
     }
 
     pub fn on_select(mut self, handler: impl Fn(T) + 'static) -> Self {
-        self.on_select = Some(Box::new(handler));
+        self.on_select = Some(std::rc::Rc::new(handler));
         self
     }
 

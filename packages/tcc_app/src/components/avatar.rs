@@ -33,13 +33,13 @@ impl Avatar {
 impl Component for Avatar {
     fn render(&self) -> impl IntoElement {
         rect()
-            .width(self.width)
-            .height(self.height)
+            .width(self.width.clone())
+            .height(self.height.clone())
             .corner_radius(CornerRadius::new_all(50.))
             .background(colors::brand())
             .child(
                 label()
-                    .text(&self.account_id[..2].to_uppercase())
+                    .text(self.account_id[..2].to_uppercase())
                     .font_size(14.)
                     .font_weight(FontWeight::BOLD)
                     .color(colors::fg_on_brand()),

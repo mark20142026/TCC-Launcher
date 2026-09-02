@@ -1,7 +1,7 @@
 //! Cluster shell layout
 
 use freya::prelude::*;
-use freya::router::prelude::Outlet;
+use freya::router::Outlet;
 
 #[derive(PartialEq)]
 pub struct ClusterShell;
