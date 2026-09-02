@@ -107,7 +107,7 @@ jobs:
                   "windows-x64": {"url": url, "sha256": sha256},
               },
           }
-          with open("update.json", "w", encoding="utf-8") as f:
+          with open("latest.json", "w", encoding="utf-8") as f:
               json.dump(manifest, f, indent=2)
           print(json.dumps(manifest, indent=2))
           PY
@@ -117,5 +117,5 @@ jobs:
         with:
           files: |
             ./installer/*.exe
-            ./update.json
+            ./latest.json
           generate_release_notes: true

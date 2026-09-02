@@ -16,9 +16,10 @@ use sha2::{Digest, Sha256};
 use crate::constants::APP_VERSION;
 
 /// The manifest lives next to the installers as a release asset of the latest
-/// release, so its URL is stable across versions.
+/// release, so its URL is stable across versions. The same file is what
+/// `backend/api/latest.js` proxies for the web side.
 pub const UPDATE_MANIFEST_URL: &str =
-    "https://github.com/pnbx/TCC-Launcher/releases/latest/download/update.json";
+    "https://github.com/pnbx/TCC-Launcher/releases/latest/download/latest.json";
 
 /// Information about an available update.
 #[derive(Debug, Clone)]
