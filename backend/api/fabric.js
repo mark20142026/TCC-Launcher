@@ -1,7 +1,36 @@
 import { cors } from './_lib.js';
 
 // Fetches Fabric version data from meta.fabricmc.net/v2
-// Fetches game versions AND the latest loader version for each
+// Fetches game versions AND every stable loader version from 0.18.5 up, so
+// players can pick an older loader instead of only the latest one.
+const MIN_LOADER_VERSION = [0, 18, 5];
+// Used only when the loader metadata upstream is unreachable, so the endpoint
+// still offers something installable.
+const FALLBACK_LOADERS = ['0.16.14'];
+
+function loaderTuple(version) {
+  const core = String(version).split('+')[0].split('-')[0];
+  const parts = core.split('.');
+  if (parts.length < 2) return null;
+  const nums = [];
+  for (const part of parts) {
+    const n = Number.parseInt(part, 10);
+    if (!Number.isInteger(n) || n < 0) return null;
+    nums.push(n);
+  }
+  while (nums.length < 3) nums.push(0);
+  return nums;
+}
+
+function atLeast(version, min) {
+  const tuple = loaderTuple(version);
+  if (!tuple) return false;
+  for (let i = 0; i < 3; i++) {
+    if (tuple[i] !== min[i]) return tuple[i] > min[i];
+  }
+  return true;
+}
+
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
@@ -26,8 +55,9 @@ export default async function handler(req, res) {
       return res.end(JSON.stringify({ gameVersions: [] }));
     }
 
-    // Get latest stable loader version (fetch once for one game version)
-    let latestLoaderVersion = '0.16.14'; // fallback
+    // Every stable loader from 0.18.5 up, newest first (upstream is sorted
+    // newest first already; we keep that order).
+    let loaderVersions = [];
     try {
       const loaderRes = await fetch(
         'https://meta.fabricmc.net/v2/versions/loader',
@@ -35,14 +65,17 @@ export default async function handler(req, res) {
       );
       if (loaderRes.ok) {
         const loaderData = await loaderRes.json();
-        if (Array.isArray(loaderData) && loaderData.length > 0) {
-          const stableLoader = loaderData.find(l => l.stable) || loaderData[0];
-          if (stableLoader && stableLoader.version) {
-            latestLoaderVersion = stableLoader.version;
-          }
+        if (Array.isArray(loaderData)) {
+          loaderVersions = loaderData
+            .filter((l) => l && l.stable && l.version && atLeast(l.version, MIN_LOADER_VERSION))
+            .map((l) => l.version);
         }
       }
     } catch {}
+
+    if (loaderVersions.length === 0) {
+      loaderVersions = FALLBACK_LOADERS;
+    }
 
     const gameVersions = [];
     for (const entry of gameData) {
@@ -50,11 +83,11 @@ export default async function handler(req, res) {
       gameVersions.push({
         id: entry.version,
         stable: true,
-        loaders: [{
-          id: latestLoaderVersion,
-          url: `https://meta.fabricmc.net/v2/versions/loader/${entry.version}/${latestLoaderVersion}/profile/json`,
+        loaders: loaderVersions.map((loaderVersion) => ({
+          id: loaderVersion,
+          url: `https://meta.fabricmc.net/v2/versions/loader/${entry.version}/${loaderVersion}/profile/json`,
           stable: true
-        }]
+        }))
       });
     }
 
