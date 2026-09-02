@@ -2,6 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "trailingSlash": false,
   "cleanUrls": true,
+  "crons": [
+    { "path": "/api/telegram-daily", "schedule": "30 8 * * *" }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/api/landing" },
     { "source": "/tcc/latest", "destination": "/api/landing" },
