@@ -87,7 +87,7 @@ impl CredentialsStore {
     /// Gets a specific account by ID.
     pub async fn get_account(&self, id: Uuid) -> Option<MinecraftAccount> {
         sqlx::query("SELECT id, username, access_token, refresh_token, expires, kind FROM accounts WHERE id = ?")
-            .bind(id.as_bytes())
+            .bind(id.as_bytes().as_slice())
             .fetch_optional(&self.pool)
             .await
             .ok()
@@ -108,7 +108,7 @@ impl CredentialsStore {
             "INSERT INTO accounts (id, username, access_token, refresh_token, expires, kind) \
              VALUES (?, ?, ?, ?, ?, ?)",
         )
-        .bind(account.id.as_bytes())
+        .bind(account.id.as_bytes().as_slice())
         .bind(&account.username)
         .bind(&account.access_token)
         .bind(&account.refresh_token)
@@ -132,7 +132,7 @@ impl CredentialsStore {
     /// Removes an account.
     pub async fn remove_account(&self, id: Uuid) -> AuthResult<()> {
         sqlx::query("DELETE FROM accounts WHERE id = ?")
-            .bind(id.as_bytes())
+            .bind(id.as_bytes().as_slice())
             .execute(&self.pool)
             .await?;
 
@@ -155,7 +155,7 @@ impl CredentialsStore {
 
         if let Some(id) = id {
             sqlx::query("INSERT OR REPLACE INTO default_user (user_id) VALUES (?)")
-                .bind(id.as_bytes())
+                .bind(id.as_bytes().as_slice())
                 .execute(&self.pool)
                 .await?;
         } else {
