@@ -14,7 +14,7 @@ homepage = "https://github.com/pnbx/TCC-Launcher"
 license = "GPL-3.0-only"
 readme = "README.md"
 repository = "https://github.com/pnbx/TCC-Launcher"
-version = "1.0.1"
+version = "1.0.2"
 
 [workspace.dependencies]
 # core

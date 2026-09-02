@@ -4230,7 +4230,7 @@ checksum = "2f3a9f18d041e6d0e102a0a46750538147e5e8992d3b4873aaafee2520b00ce3"
 
 [[package]]
 name = "polyio"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "anyhow",
  "async-compression",
@@ -5793,7 +5793,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_app"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "anyhow",
  "arboard",
@@ -5832,7 +5832,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_auth"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "anyhow",
  "chrono",
@@ -5852,7 +5852,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_cluster"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "async-trait",
  "chrono",
@@ -5875,7 +5875,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_common"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "chrono",
  "serde",
@@ -5886,7 +5886,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_content"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "async-trait",
  "chrono",
@@ -5902,7 +5902,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_core"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5928,7 +5928,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_db"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "anyhow",
  "chrono",
@@ -5945,7 +5945,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_events"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "serde",
  "tcc_common",
@@ -5956,7 +5956,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_java"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "async-compression",
  "async-trait",
@@ -5975,7 +5975,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_macro"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -5984,7 +5984,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_mc"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "async-trait",
  "chrono",
@@ -6000,7 +6000,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_net"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "polyio",
  "reqwest 0.13.3",
@@ -6014,7 +6014,7 @@ dependencies = [
 
 [[package]]
 name = "tcc_polyplus"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "reqwest 0.13.3",
  "serde",
