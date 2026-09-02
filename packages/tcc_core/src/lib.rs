@@ -25,7 +25,15 @@ pub enum LauncherError {
     #[error("the launcher is not initialized yet")]
     NotInitialized,
     #[error("authentication error: {0}")]
-    Auth(#[from] tcc_auth::AuthError),
+    Auth(String),
     #[error("{0}")]
     Other(String),
+}
+
+impl From<tcc_auth::AuthError> for LauncherError {
+    fn from(e: tcc_auth::AuthError) -> Self {
+        // AuthError holds non-Clone types (sqlx errors), so only its message
+        // travels with the cloneable launcher error.
+        Self::Auth(e.to_string())
+    }
 }
