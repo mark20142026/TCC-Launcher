@@ -87,7 +87,7 @@ pub fn onboarding_nav(
         Button::new()
             .ghost()
             .on_press(move |_| {
-                let _ = RouterContext::get().push(route);
+                let _ = RouterContext::get().push(route.clone());
             })
             .child(Icon::new(IconType::ChevronLeft).size(16.))
             .text("Back")
@@ -107,7 +107,7 @@ pub fn onboarding_nav(
                 .primary()
                 .enabled(can_continue)
                 .on_press(move |_| {
-                    let _ = RouterContext::get().push(next);
+                    let _ = RouterContext::get().push(next.clone());
                 })
                 .text("Continue")
                 .child(Icon::new(IconType::ChevronRight).size(16.)),

@@ -50,5 +50,5 @@ fn app() -> Element {
     let actions = crate::hooks::Actions::new();
     use_provide_actions(&actions);
 
-    crate::router().into_element()
+    crate::routes::router().into_element()
 }
