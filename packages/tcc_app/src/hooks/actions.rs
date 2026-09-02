@@ -1,35 +1,19 @@
 //! Actions for TCC Launcher
 
-use freya::prelude::*;
-use freya::query::Mutation;
 use crate::routes::Route;
-use tcc_auth::MinecraftAccount;
-use uuid::Uuid;
 
-pub struct Actions {
-    pub router: freya::router::RouterContext,
-    // Add more actions as needed
-}
+/// App-wide commands shared through a root context.
+#[derive(Clone, Copy, Default)]
+pub struct Actions;
 
 impl Actions {
-    pub fn new() -> Self {
-        Self {
-            router: freya::router::RouterContext::get(),
-        }
-    }
-
+    /// Pushes a route. Must be called from inside the router tree.
     pub fn navigate(&self, route: Route) {
-        let _ = self.router.push(route);
+        let _ = freya::router::RouterContext::get().push(route);
     }
 
     pub fn close_account_switcher(&self) {
-        // Implementation for closing account switcher
-    }
-}
-
-impl Default for Actions {
-    fn default() -> Self {
-        Self::new()
+        crate::hooks::set_account_switcher_open(false);
     }
 }
 

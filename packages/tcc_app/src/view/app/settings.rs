@@ -62,7 +62,43 @@ pub struct SettingsLauncher;
 
 impl Component for SettingsLauncher {
     fn render(&self) -> impl IntoElement {
-        settings_page("Launcher", "Launcher settings")
+        rect()
+            .width(Size::fill())
+            .height(Size::fill())
+            .padding(Gaps::new_all(24.))
+            .spacing(12.)
+            .child(
+                label()
+                    .text("Launcher")
+                    .font_size(24.)
+                    .font_weight(FontWeight::BOLD)
+                    .color(colors::fg_primary()),
+            )
+            .child(
+                label()
+                    .text("Launcher settings")
+                    .font_size(16.)
+                    .color(colors::fg_secondary()),
+            )
+            .child(
+                label()
+                    .text(format!(
+                        "Current version: {}",
+                        crate::constants::APP_VERSION
+                    ))
+                    .font_size(14.)
+                    .color(colors::fg_primary()),
+            )
+            .child(
+                crate::components::Button::new()
+                    .secondary()
+                    .on_press(|_| {
+                        // The dialog that reports the result runs from the
+                        // worker thread, so no state plumbing is needed here.
+                        std::thread::spawn(crate::updater::check_and_install_interactive);
+                    })
+                    .text("Check for Updates"),
+            )
     }
 }
 

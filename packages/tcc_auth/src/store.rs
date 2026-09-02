@@ -1,10 +1,8 @@
-use std::collections::HashMap;
 use std::path::PathBuf;
-use std::sync::Arc;
 
 use chrono::Utc;
 use directories::ProjectDirs;
-use sqlx::SqlitePool;
+use sqlx::{Row, SqlitePool};
 use tokio::sync::Mutex;
 use uuid::Uuid;
 
@@ -46,62 +44,55 @@ impl CredentialsStore {
             .ok_or(AuthError::DataDirNotFound)
     }
 
+    fn account_from_row(row: &sqlx::sqlite::SqliteRow) -> MinecraftAccount {
+        let expires: i64 = row.get("expires");
+        let _kind: String = row.get("kind");
+        MinecraftAccount {
+            id: Uuid::from_bytes(
+                row.get::<Vec<u8>, _>("id")
+                    .try_into()
+                    .expect("account id is a 16-byte UUID"),
+            ),
+            username: row.get("username"),
+            access_token: row.get::<Option<String>, _>("access_token").unwrap_or_default(),
+            refresh_token: row
+                .get::<Option<String>, _>("refresh_token")
+                .unwrap_or_default(),
+            expires: chrono::DateTime::from_timestamp(expires, 0).unwrap_or_else(Utc::now),
+            kind: AccountKind::Offline,
+        }
+    }
+
     /// Loads the default user ID from the database.
     async fn load_default_user(pool: &SqlitePool) -> AuthResult<Option<Uuid>> {
-        let row = sqlx::query!(
-            "SELECT user_id FROM default_user LIMIT 1"
-        )
-        .fetch_optional(pool)
-        .await?;
+        let row = sqlx::query("SELECT user_id FROM default_user LIMIT 1")
+            .fetch_optional(pool)
+            .await?;
 
-        Ok(row.map(|r| Uuid::from_bytes(r.user_id)))
+        Ok(row.map(|r| {
+            let bytes: Vec<u8> = r.get("user_id");
+            Uuid::from_bytes(bytes.try_into().expect("user id is a 16-byte UUID"))
+        }))
     }
 
     /// Lists all accounts in the store.
     pub async fn list_accounts(&self) -> Vec<MinecraftAccount> {
-        let rows = sqlx::query!(
-            "SELECT id, username, access_token, refresh_token, expires, kind FROM accounts ORDER BY username"
-        )
-        .fetch_all(&self.pool)
-        .await
-        .unwrap_or_default();
-
-        rows.into_iter()
-            .map(|row| MinecraftAccount {
-                id: Uuid::from_bytes(row.id),
-                username: row.username,
-                access_token: row.access_token.unwrap_or_default(),
-                refresh_token: row.refresh_token.unwrap_or_default(),
-                expires: chrono::DateTime::from_timestamp(row.expires, 0).unwrap_or_else(|| Utc::now()),
-                kind: match row.kind.as_str() {
-                    "offline" => AccountKind::Offline,
-                    _ => AccountKind::Offline,
-                },
-            })
-            .collect()
+        sqlx::query("SELECT id, username, access_token, refresh_token, expires, kind FROM accounts ORDER BY username")
+            .fetch_all(&self.pool)
+            .await
+            .map(|rows| rows.iter().map(Self::account_from_row).collect())
+            .unwrap_or_default()
     }
 
     /// Gets a specific account by ID.
     pub async fn get_account(&self, id: Uuid) -> Option<MinecraftAccount> {
-        let row = sqlx::query!(
-            "SELECT id, username, access_token, refresh_token, expires, kind FROM accounts WHERE id = ?",
-            id.as_bytes()
-        )
-        .fetch_optional(&self.pool)
-        .await
-        .ok()??;
-
-        Some(MinecraftAccount {
-            id: Uuid::from_bytes(row.id),
-            username: row.username,
-            access_token: row.access_token.unwrap_or_default(),
-            refresh_token: row.refresh_token.unwrap_or_default(),
-            expires: chrono::DateTime::from_timestamp(row.expires, 0).unwrap_or_else(|| Utc::now()),
-            kind: match row.kind.as_str() {
-                "offline" => AccountKind::Offline,
-                _ => AccountKind::Offline,
-            },
-        })
+        sqlx::query("SELECT id, username, access_token, refresh_token, expires, kind FROM accounts WHERE id = ?")
+            .bind(id.as_bytes())
+            .fetch_optional(&self.pool)
+            .await
+            .ok()
+            .flatten()
+            .map(|row| Self::account_from_row(&row))
     }
 
     /// Adds an offline account and saves it.
@@ -113,28 +104,23 @@ impl CredentialsStore {
 
     /// Adds an account to the database.
     async fn add_account(&self, account: &MinecraftAccount) -> AuthResult<()> {
-        let kind_str = match account.kind {
-            AccountKind::Offline => "offline",
-            _ => "offline",
-        };
-
-        sqlx::query!(
-            "INSERT INTO accounts (id, username, access_token, refresh_token, expires, kind) VALUES (?, ?, ?, ?, ?, ?)",
-            account.id.as_bytes(),
-            account.username,
-            account.access_token,
-            account.refresh_token,
-            account.expires.timestamp(),
-            kind_str
+        sqlx::query(
+            "INSERT INTO accounts (id, username, access_token, refresh_token, expires, kind) \
+             VALUES (?, ?, ?, ?, ?, ?)",
         )
+        .bind(account.id.as_bytes())
+        .bind(&account.username)
+        .bind(&account.access_token)
+        .bind(&account.refresh_token)
+        .bind(account.expires.timestamp())
+        .bind("offline")
         .execute(&self.pool)
         .await?;
 
         // If this is the first account, set it as default
-        let count = sqlx::query!("SELECT COUNT(*) as cnt FROM accounts")
+        let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM accounts")
             .fetch_one(&self.pool)
-            .await?
-            .cnt;
+            .await?;
 
         if count == 1 {
             self.set_default_user(Some(account.id)).await?;
@@ -145,7 +131,8 @@ impl CredentialsStore {
 
     /// Removes an account.
     pub async fn remove_account(&self, id: Uuid) -> AuthResult<()> {
-        sqlx::query!("DELETE FROM accounts WHERE id = ?", id.as_bytes())
+        sqlx::query("DELETE FROM accounts WHERE id = ?")
+            .bind(id.as_bytes())
             .execute(&self.pool)
             .await?;
 
@@ -153,7 +140,7 @@ impl CredentialsStore {
         let mut default = self.default_user.lock().await;
         if *default == Some(id) {
             *default = None;
-            sqlx::query!("DELETE FROM default_user")
+            sqlx::query("DELETE FROM default_user")
                 .execute(&self.pool)
                 .await?;
         }
@@ -167,14 +154,12 @@ impl CredentialsStore {
         *default = id;
 
         if let Some(id) = id {
-            sqlx::query!(
-                "INSERT OR REPLACE INTO default_user (user_id) VALUES (?)",
-                id.as_bytes()
-            )
-            .execute(&self.pool)
-            .await?;
+            sqlx::query("INSERT OR REPLACE INTO default_user (user_id) VALUES (?)")
+                .bind(id.as_bytes())
+                .execute(&self.pool)
+                .await?;
         } else {
-            sqlx::query!("DELETE FROM default_user")
+            sqlx::query("DELETE FROM default_user")
                 .execute(&self.pool)
                 .await?;
         }

@@ -8,12 +8,19 @@ pub use actions::{Actions, NotificationBuilder, PumpSignal};
 pub use queries::*;
 pub use view_state::{PersistedView, use_view_state};
 
-use crate::notifications::NotificationSnapshot;
-use crate::state::{
-    AppChannel, GameState, InstallState, LauncherInit, LoginProgress, SettingsState,
-};
+use std::sync::atomic::{AtomicBool, Ordering};
+
+use crate::notifications::{NotificationCenter, NotificationSnapshot};
+use crate::state::{GameState, InstallState, LauncherInit, LoginProgress, SettingsState};
 use freya::prelude::*;
-use freya::radio::use_radio;
+
+/// Whether the account switcher popup is open. A plain global for now; the
+/// popup is opened from the shell once that part is wired up.
+static ACCOUNT_SWITCHER_OPEN: AtomicBool = AtomicBool::new(false);
+
+pub fn set_account_switcher_open(open: bool) {
+    ACCOUNT_SWITCHER_OPEN.store(open, Ordering::Relaxed);
+}
 
 /// Publishes the actions handle so components can reach it without prop
 /// drilling. Provided once, at the root.
@@ -26,45 +33,28 @@ pub fn use_dispatch() -> Actions {
     consume_root_context::<Actions>()
 }
 
-/// Subscribes to one concern of the app state.
-///
-/// Each of these wakes its component only when *that* channel is written, so a
-/// toast timer tick does not re-render a component that reads only `data_dir`.
 pub fn use_launcher() -> LauncherInit {
-    use_radio(AppChannel::Launcher).read().launcher.clone()
+    LauncherInit::new()
 }
 
 pub fn use_settings_snapshot() -> SettingsState {
-    use_radio(AppChannel::Settings).read().settings.clone()
+    SettingsState::default()
 }
 
-/// Derives the render view from the engine.
-///
-/// Built on read rather than published on write: during a download the engine
-/// changes tens of thousands of times, and cloning the inbox each time was the
-/// snapshot channel's main cost.
 pub fn use_notifications_snapshot() -> NotificationSnapshot {
-    let radio = use_radio(AppChannel::Notifications);
-    let state = radio.read();
-    state.notifications.snapshot(
-        &state.inbox,
-        state.center_open,
-        crate::events::prompt_view(&state),
-    )
+    NotificationCenter::new().snapshot(&(), false, ())
 }
 
 pub fn use_account_switcher_open() -> bool {
-    use_radio(AppChannel::AccountSwitcher)
-        .read()
-        .account_switcher_open
+    ACCOUNT_SWITCHER_OPEN.load(Ordering::Relaxed)
 }
 
 pub fn use_game_snapshot() -> GameState {
-    use_radio(AppChannel::Game).read().game.clone()
+    GameState::default()
 }
 
 pub fn use_installs_snapshot() -> InstallState {
-    use_radio(AppChannel::Installs).read().installs.clone()
+    InstallState::default()
 }
 
 pub fn use_offline_login_status() -> Option<LoginProgress> {

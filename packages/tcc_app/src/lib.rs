@@ -1,5 +1,7 @@
 //! TCC Launcher Freya App library
 
+use freya::prelude::*;
+
 pub mod assets;
 pub mod components;
 pub mod constants;
@@ -18,3 +20,38 @@ pub mod ui;
 pub mod updater;
 pub mod utils;
 pub mod view;
+
+/// Runs the launcher: initializes the core, kicks off the auto-update check,
+/// then enters the UI event loop.
+pub fn run(devtools: bool) {
+    {
+        match tokio::runtime::Runtime::new() {
+            Ok(rt) => {
+                if let Err(e) = rt.block_on(async { crate::launcher::init_launcher().await }) {
+                    tracing::error!("launcher core failed to initialize: {e:#}");
+                }
+            }
+            Err(e) => tracing::error!("failed to create async runtime: {e}"),
+        }
+    }
+
+    std::thread::spawn(crate::updater::auto_check_background);
+
+    let config = LaunchConfig::default()
+        .with_title("TCC Launcher")
+        .with_size((1200.0, 800.0))
+        .with_devtools(devtools);
+
+    launch_with_props(app, config, ()).unwrap();
+}
+
+fn app() -> Element {
+    use crate::hooks::use_provide_actions;
+
+    let actions = crate::hooks::Actions::new();
+    use_provide_actions(&actions);
+
+    rsx! {
+        freya::router::Router { crate::router() }
+    }
+}

@@ -44,8 +44,8 @@ sysinfo.workspace = true
 
 anyhow.workspace = true
 regex.workspace = true
-
-cargo-packager-updater = "=0.2.3"
+serde_json.workspace = true
+sha2.workspace = true
 
 rfd = "=0.17.2"
 open = "=5.4.0"
