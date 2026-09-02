@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const INSTALLER_URL = 'https://github.com/pnbx/TCC-Launcher/releases/download/v2.3.2/oneclient_app_2.3.2_x64-setup.exe';
+// The CI uploads a copy of the newest installer under this versionless name
+// with every release, so this URL never needs updating again.
+const INSTALLER_URL = 'https://github.com/pnbx/TCC-Launcher/releases/latest/download/TCC-Launcher-latest-setup.exe';
 
 module.exports = async (req, res) => {
   try {
