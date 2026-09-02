@@ -1,6 +1,10 @@
 import { cors } from './_lib.js';
 
 // Fetches Quilt version data from meta.quiltmc.org/v3
+// Fetches game versions AND every stable loader version (newest first), so
+// players can pick an older loader instead of only the latest one.
+const FALLBACK_LOADERS = ['0.20.0'];
+
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
@@ -25,8 +29,9 @@ export default async function handler(req, res) {
       return res.end(JSON.stringify({ gameVersions: [] }));
     }
 
-    // Get latest stable loader version
-    let latestLoaderVersion = '0.20.0'; // fallback
+    // Every stable loader version, newest first (upstream is sorted newest
+    // first already; we keep that order).
+    let loaderVersions = [];
     try {
       const loaderRes = await fetch(
         'https://meta.quiltmc.org/v3/versions/loader',
@@ -34,14 +39,17 @@ export default async function handler(req, res) {
       );
       if (loaderRes.ok) {
         const loaderData = await loaderRes.json();
-        if (Array.isArray(loaderData) && loaderData.length > 0) {
-          const stableLoader = loaderData.find(l => l.stable) || loaderData[0];
-          if (stableLoader && stableLoader.version) {
-            latestLoaderVersion = stableLoader.version;
-          }
+        if (Array.isArray(loaderData)) {
+          loaderVersions = loaderData
+            .filter((l) => l && l.stable && l.version)
+            .map((l) => l.version);
         }
       }
     } catch {}
+
+    if (loaderVersions.length === 0) {
+      loaderVersions = FALLBACK_LOADERS;
+    }
 
     const gameVersions = [];
     for (const entry of gameData) {
@@ -49,11 +57,11 @@ export default async function handler(req, res) {
       gameVersions.push({
         id: entry.version,
         stable: true,
-        loaders: [{
-          id: latestLoaderVersion,
-          url: `https://meta.quiltmc.org/v3/versions/loader/${entry.version}/${latestLoaderVersion}/profile/json`,
+        loaders: loaderVersions.map((loaderVersion) => ({
+          id: loaderVersion,
+          url: `https://meta.quiltmc.org/v3/versions/loader/${entry.version}/${loaderVersion}/profile/json`,
           stable: true
-        }]
+        }))
       });
     }
 
