@@ -112,6 +112,12 @@ jobs:
           print(json.dumps(manifest, indent=2))
           PY
 
+      - name: Copy installer to a versionless name
+        run: |
+          exe=$(ls ./installer/*.exe | head -1)
+          cp "$exe" "./installer/TCC-Launcher-latest-setup.exe"
+          ls -la ./installer/
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
