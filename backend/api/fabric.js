@@ -55,8 +55,9 @@ export default async function handler(req, res) {
       return res.end(JSON.stringify({ gameVersions: [] }));
     }
 
-    // Every stable loader from 0.18.5 up, newest first (upstream is sorted
-    // newest first already; we keep that order).
+    // Every loader from 0.18.5 up, newest first. The `stable` flag is
+    // intentionally ignored: Fabric only marks the very latest version
+    // stable, which would collapse this list to a single entry.
     let loaderVersions = [];
     try {
       const loaderRes = await fetch(
@@ -67,7 +68,7 @@ export default async function handler(req, res) {
         const loaderData = await loaderRes.json();
         if (Array.isArray(loaderData)) {
           loaderVersions = loaderData
-            .filter((l) => l && l.stable && l.version && atLeast(l.version, MIN_LOADER_VERSION))
+            .filter((l) => l && l.version && atLeast(l.version, MIN_LOADER_VERSION))
             .map((l) => l.version);
         }
       }
