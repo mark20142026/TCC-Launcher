@@ -41,14 +41,14 @@ jobs:
           set -euo pipefail
           out="packages/oneclient_app/icons/generated"
           mkdir -p "$out"
-          xcrun actool "packages/oneclient_app/icons/TCC Client.icon" \
+          xcrun actool "packages/oneclient_app/icons/OneClient.icon" \
             --compile "$out" \
-            --app-icon "TCC Client" \
+            --app-icon OneClient \
             --output-partial-info-plist "$out/partial.plist" \
             --platform macosx \
             --minimum-deployment-target 26.0 \
             --errors --warnings --notices
-          rm -f "$out/TCC Client.icns"
+          rm -f "$out/OneClient.icns"
           test -f "$out/Assets.car"
 
       - name: Package DMG
